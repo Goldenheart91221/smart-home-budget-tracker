@@ -343,7 +343,7 @@ const MainContent = () => {
 };
 
 function AuthenticatedApp() {
-  const { currentUser } = useAuth();
+  const { currentUser, isUserAdmin } = useAuth();
 
   if (!currentUser) {
     return <AuthPage />;
@@ -364,14 +364,18 @@ function AuthenticatedApp() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>HomeLedger Pro • Connected as <strong>{currentUser.name}</strong> ({currentUser.role.toUpperCase()})</span>
+              <span>HomeLedger Pro • Signed in as <strong>{currentUser.name}</strong></span>
             </div>
             <div className="flex items-center gap-4">
-              <span>Google OAuth & Session Guard</span>
+              <span>Multi-User Session Guard</span>
               <span>•</span>
               <span>Encrypted Local Sync</span>
-              <span>•</span>
-              <span>Admin Activity Logs Active</span>
+              {isUserAdmin && (
+                <>
+                  <span>•</span>
+                  <span>Admin Activity Logs Active</span>
+                </>
+              )}
             </div>
           </div>
         </footer>

@@ -9,10 +9,12 @@ const MASTER_ADMIN_KEY = 'homeledger_master_admin_email_v2';
 
 const DEFAULT_MASTER_ADMIN_EMAIL = 'admin@homeledger.com';
 
+// Only the configured Owner/Admin account is seeded.
+// All other users register themselves through the Sign Up form.
 const DEFAULT_USERS = [
   {
     id: 'usr-admin-1',
-    name: 'Owner (Master Admin)',
+    name: 'Owner',
     email: 'admin@homeledger.com',
     password: 'admin',
     role: 'admin',
@@ -22,37 +24,10 @@ const DEFAULT_USERS = [
     avatarType: 'emoji',
     status: 'active',
     createdAt: '2026-09-01T10:00:00.000Z',
-    lastLoginAt: '2026-09-23T08:30:00.000Z'
-  },
-  {
-    id: 'usr-google-1',
-    name: 'Rohit Sharma',
-    email: 'rohit.sharma@gmail.com',
-    password: null,
-    role: 'user',
-    isSuperAdmin: false,
-    provider: 'google',
-    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=faces',
-    avatarType: 'image',
-    status: 'active',
-    createdAt: '2026-09-10T14:20:00.000Z',
-    lastLoginAt: '2026-09-22T19:45:00.000Z'
-  },
-  {
-    id: 'usr-user-2',
-    name: 'Priya Patel',
-    email: 'priya.patel@outlook.com',
-    password: 'user123',
-    role: 'user',
-    isSuperAdmin: false,
-    provider: 'email',
-    avatar: '👩‍💼',
-    avatarType: 'emoji',
-    status: 'active',
-    createdAt: '2026-09-15T11:15:00.000Z',
-    lastLoginAt: '2026-09-23T07:10:00.000Z'
+    lastLoginAt: null
   }
 ];
+
 
 const INITIAL_LOGS = [
   {
@@ -142,12 +117,13 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem(MASTER_ADMIN_KEY, masterAdminEmail);
   }, [masterAdminEmail]);
 
-  // Check if an email or user is the Master Admin
+  // STRICT: Admin is determined ONLY by email match against masterAdminEmail.
+  // Never use role field alone — email is the single source of truth.
   const checkIsAdmin = (user) => {
     if (!user) return false;
     const email = user.email?.toLowerCase().trim();
     const master = masterAdminEmail.toLowerCase().trim();
-    return email === master || user.role === 'admin';
+    return email === master; // Email-only check — role field is NOT sufficient
   };
 
   const isUserAdmin = checkIsAdmin(currentUser);

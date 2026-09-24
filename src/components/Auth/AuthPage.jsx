@@ -8,12 +8,10 @@ import {
   User, 
   Eye, 
   EyeOff, 
-  ArrowRight, 
   ShieldCheck, 
   CheckCircle2, 
   Sparkles, 
-  Crown,
-  Zap
+  Crown
 } from 'lucide-react';
 
 export const AuthPage = () => {
@@ -56,14 +54,6 @@ export const AuthPage = () => {
     }
   };
 
-  const handleQuickDemo = (demoEmail, demoPass) => {
-    setError(null);
-    try {
-      login(demoEmail, demoPass);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
@@ -287,47 +277,6 @@ export const AuthPage = () => {
               </button>
 
             </form>
-
-            {/* Quick One-Click Demo Logins */}
-            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 mb-2.5">
-                <Zap className="w-3.5 h-3.5 text-amber-500" />
-                <span>Quick Test Logins:</span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleQuickDemo('admin@homeledger.com', 'admin')}
-                  className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/80 text-xs font-bold text-left transition flex items-center justify-between"
-                  title="Log in as the Master Admin / Owner (Has full Admin Portal access)"
-                >
-                  <div className="flex items-center gap-2">
-                    <span>👑</span>
-                    <div>
-                      <p className="leading-tight">Owner (Admin)</p>
-                      <p className="text-[10px] opacity-75">admin@homeledger.com</p>
-                    </div>
-                  </div>
-                  <ArrowRight className="w-3.5 h-3.5 opacity-60" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleQuickDemo('priya.patel@outlook.com', 'user123')}
-                  className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-800 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/80 text-xs font-bold text-left transition flex items-center justify-between"
-                  title="Log in as a regular household member (Admin Portal completely hidden)"
-                >
-                  <div className="flex items-center gap-2">
-                    <span>👩‍💼</span>
-                    <div>
-                      <p className="leading-tight">Regular Member</p>
-                      <p className="text-[10px] opacity-75">priya.patel@outlook.com</p>
-                    </div>
-                  </div>
-                  <ArrowRight className="w-3.5 h-3.5 opacity-60" />
-                </button>
-              </div>
-            </div>
 
           </div>
         </div>
