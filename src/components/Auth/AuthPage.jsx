@@ -8,6 +8,7 @@ import {
   User, 
   Eye, 
   EyeOff, 
+  ArrowRight,
   ShieldCheck, 
   CheckCircle2, 
   Sparkles, 
