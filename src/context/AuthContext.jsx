@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }) => {
     return DEFAULT_USERS;
   });
 
-  // Current logged in user session (Default to the Master Admin)
+  // Current logged in user session (null = not logged in, shows Auth screen)
   const [currentUser, setCurrentUser] = useState(() => {
     try {
       const saved = localStorage.getItem(SESSION_STORAGE_KEY);
@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }) => {
     } catch (e) {
       console.error('Failed to load session:', e);
     }
-    return DEFAULT_USERS[0];
+    return null; // Always show login screen on fresh browser/device
   });
 
   // Activity audit logs
