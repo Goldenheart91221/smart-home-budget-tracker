@@ -250,6 +250,42 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Reset password for a local email-based account
+  // (No email is sent — this is a localStorage-only app with no real backend)
+  const resetPassword = (email, newPassword) => {
+    const trimmedEmail = email.trim().toLowerCase();
+    const user = users.find(u => u.email.toLowerCase() === trimmedEmail);
+
+    if (!user) {
+      throw new Error('No account found with this email address.');
+    }
+    if (user.provider === 'google' && !user.password) {
+      throw new Error('This account uses Google Sign-In and has no local password to reset.');
+    }
+    if (!newPassword || newPassword.length < 4) {
+      throw new Error('New password must be at least 4 characters.');
+    }
+
+    // Update password in users array (never expose or log the actual password)
+    setUsers(prev => prev.map(u =>
+      u.email.toLowerCase() === trimmedEmail
+        ? { ...u, password: newPassword }
+        : u
+    ));
+
+    // If the current session user matches, keep them logged in with updated data
+    if (currentUser?.email.toLowerCase() === trimmedEmail) {
+      setCurrentUser(prev => ({ ...prev, password: newPassword }));
+    }
+
+    recordActivity(
+      'Password Reset',
+      `Password was reset locally for account: ${trimmedEmail}`,
+      user,
+      'auth'
+    );
+  };
+
   // Logout
   const logout = () => {
     if (currentUser) {
@@ -337,6 +373,7 @@ export const AuthProvider = ({ children }) => {
         signup,
         loginWithGoogle,
         logout,
+        resetPassword,
         updateUserRole,
         setAsMasterAdmin,
         deleteUser,

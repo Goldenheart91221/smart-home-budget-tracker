@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import GoogleAuthModal from './GoogleAuthModal';
+import ForgotPasswordModal from './ForgotPasswordModal';
 import { 
   Home, 
   Lock, 
@@ -20,6 +21,7 @@ export const AuthPage = () => {
 
   const [isSignUp, setIsSignUp] = useState(false);
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
 
   // Form fields
   const [name, setName] = useState('');
@@ -267,6 +269,19 @@ export const AuthPage = () => {
                 </div>
               </div>
 
+              {/* Forgot Password link — only shown on Sign In tab */}
+              {!isSignUp && (
+                <div className="flex justify-end -mt-1">
+                  <button
+                    type="button"
+                    onClick={() => setIsForgotPasswordOpen(true)}
+                    className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 hover:underline transition"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+              )}
+
               {/* Submit CTA */}
               <button
                 type="submit"
@@ -288,6 +303,12 @@ export const AuthPage = () => {
       <GoogleAuthModal
         isOpen={isGoogleModalOpen}
         onClose={() => setIsGoogleModalOpen(false)}
+      />
+
+      {/* Forgot Password Modal */}
+      <ForgotPasswordModal
+        isOpen={isForgotPasswordOpen}
+        onClose={() => setIsForgotPasswordOpen(false)}
       />
 
     </div>
