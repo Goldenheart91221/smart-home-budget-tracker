@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HomeLedger Pro — B.Tech CSE Project Presentation (15 Slides)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #070B14;
+      color: #F8FAFC;
+    }
+    .font-heading {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Screen display: Inactive slides strictly hidden, active slide strictly flex */
+    .slide-container {
+      display: none !important;
+    }
+    .slide-container.active {
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      width: 100% !important;
+      max-width: 1320px !important;
+      min-height: 580px !important;
+      margin: 0 auto !important;
+    }
+
+    /* Print / PDF generation styles */
+    @media print {
+      @page {
+        size: 16in 9in;
+        margin: 0;
+      }
+      body {
+        background: #070B14 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      main {
+        display: block !important;
+        width: 100% !important;
+        max-width: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .slide-container {
+        display: flex !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        min-height: 100vh !important;
+        max-height: 100vh !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+        border-radius: 0 !important;
+        padding: 3rem !important;
+      }
+      .speaker-notes-box {
+        display: none !important;
+      }
+    }
+
+    .glass-panel {
+      background: #0D1424;
+      background: rgba(13, 20, 36, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+    }
+    .tag-badge {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+  <!-- ==================== TOP NAVIGATION CONTROLLER ==================== -->
+  <header class="no-print sticky top-0 z-50 bg-[#090E1A]/95 backdrop-blur-md border-b border-slate-800 px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-emerald-400 flex items-center justify-center font-extrabold text-white text-xs shadow-md shadow-indigo-600/30">
+        HL
+      </div>
+      <div>
+        <h1 class="text-sm font-bold text-white font-heading">HomeLedger Pro — College Presentation</h1>
+        <p class="text-[11px] text-slate-400">Sandip University • B.Tech CSE • Kajal Kumari</p>
+      </div>
+    </div>
+
+    <!-- Quick Slide Indicator Pills (1 to 15) -->
+    <div class="hidden lg:flex items-center gap-1 bg-slate-900 border border-slate-800 p-1 rounded-xl" id="slidePills">
+      <!-- Injected via JavaScript -->
+    </div>
+
+    <!-- Controls -->
+    <div class="flex items-center space-x-2">
+      <span class="text-xs font-semibold text-slate-400 mr-1" id="slideNumberDisplay">Slide 1 of 15</span>
+
+      <button onclick="prevSlide()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition flex items-center gap-1 active:scale-95">
+        ◀ Prev
+      </button>
+      <button onclick="nextSlide()" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md shadow-indigo-600/30 transition flex items-center gap-1 active:scale-95">
+        Next ▶
+      </button>
+
+      <button onclick="toggleSpeakerNotes()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold border border-amber-500/30 transition flex items-center gap-1">
+        💬 Notes
+      </button>
+
+      <button onclick="window.print()" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/30 transition flex items-center gap-1.5 active:scale-95">
+        🖨️ PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN PRESENTATION STAGE ==================== -->
+  <main class="flex-1 w-full max-w-[1380px] mx-auto p-3 sm:p-6 flex flex-col items-center justify-center relative min-h-[620px]">
+
+    <!-- ==================== SLIDE 1: TITLE ==================== -->
+    <section id="slide-1" class="slide-container active glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden" style="display: flex !important;">
+      <div class="flex justify-between items-center">
+        <span class="tag-badge bg-indigo-500/15 border border-indigo-400/30 text-indigo-300">
+          Final Year Project Presentation
+        </span>
+        <span class="text-xs text-slate-400 font-mono">B.Tech CSE 2026</span>
+      </div>
+
+      <div class="my-auto space-y-4 max-w-4xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Production-Ready • Single Page Web Application
+        </div>
+        <h1 class="text-4xl sm:text-6xl font-black font-heading text-white tracking-tight leading-tight">
+          HomeLedger <span class="bg-gradient-to-r from-indigo-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent">PRO</span>
+        </h1>
+        <p class="text-xl sm:text-2xl font-medium text-slate-200">
+          Smart Home Finance &amp; Expense Management
+        </p>
+        <p class="text-sm text-slate-400 leading-relaxed max-w-2xl">
+          An automated, client-side web application designed to track household utility bills, attribute family expense splits, enforce category budget envelopes, and provide transparent financial oversight.
+        </p>
+      </div>
+
+      <div class="pt-6 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs text-slate-400">
+        <div>
+          <span>Domain: </span><strong class="text-slate-200">Web Engineering &amp; Financial Technology</strong>
+        </div>
+        <div>
+          <span>Deployment: </span><strong class="text-emerald-400 font-mono">Render Cloud (Live)</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 2: TEAM INTRODUCTION ==================== -->
+    <section id="slide-2" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">02 / Candidate Profile</span>
+        <span class="tag-badge bg-slate-800 text-slate-300">Academic Project</span>
+      </div>
+
+      <div class="my-auto space-y-6">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-white">Project Candidate &amp; Institution</h2>
+          <p class="text-sm text-slate-400 mt-1">Undergraduate Degree Project in Computer Science and Engineering</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="p-6 rounded-2xl bg-slate-900/90 border border-indigo-500/20 space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-xl font-bold text-white shadow-lg shadow-indigo-600/20">
+              👩‍💻
+            </div>
+            <div>
+              <span class="text-[11px] font-bold text-indigo-400 uppercase tracking-wider block">Candidate Name</span>
+              <h3 class="text-2xl font-bold text-white font-heading">Kajal Kumari</h3>
+              <p class="text-xs text-slate-300 mt-1">Student, Department of Computer Science &amp; Engineering</p>
+            </div>
+            <div class="pt-2 border-t border-slate-800 text-xs text-slate-400 space-y-1">
+              <div><strong>Degree:</strong> Bachelor of Technology (B.Tech)</div>
+              <div><strong>Branch:</strong> Computer Science &amp; Engineering (CSE)</div>
+            </div>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-slate-900/90 border border-emerald-500/20 space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-600 flex items-center justify-center text-xl font-bold text-white shadow-lg shadow-emerald-600/20">
+              🏛️
+            </div>
+            <div>
+              <span class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider block">Institution</span>
+              <h3 class="text-2xl font-bold text-white font-heading">Sandip University</h3>
+              <p class="text-xs text-slate-300 mt-1">School of Engineering &amp; Technology</p>
+            </div>
+            <div class="pt-2 border-t border-slate-800 text-xs text-slate-400 space-y-1">
+              <div><strong>Project Type:</strong> Capstone / Final Year Independent Project</div>
+              <div><strong>Supervision:</strong> Department of CSE Evaluation Board</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>HomeLedger Pro • Sandip University</span>
+        <span>Slide 2 of 15</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 3: PROBLEM STATEMENT ==================== -->
+    <section id="slide-3" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">03 / Problem Statement</span>
+        <span class="tag-badge bg-rose-500/10 text-rose-400 border border-rose-500/20">Challenges Identified</span>
+      </div>
+
+      <div class="my-auto space-y-6">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-white">The Household Financial Management Dilemma</h2>
+          <p class="text-sm text-slate-400 mt-1">Why traditional informal expense tracking fails in shared and family households</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+            <div class="text-rose-400 font-bold flex items-center gap-2">
+              <span>📉</span> Unorganized Expense Logging
+            </div>
+            <p class="text-slate-300 leading-relaxed text-xs">
+              Households rely on paper slips, fragmented WhatsApp chats, or mental notes. Transactions lack structured categorization, leading to untraceable month-end cash leaks.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+            <div class="text-amber-400 font-bold flex items-center gap-2">
+              <span>⏰</span> Missed Utility Bill Deadlines
+            </div>
+            <p class="text-slate-300 leading-relaxed text-xs">
+              Electricity, broadband, piped gas, and staff salaries have varying due dates. Without automated countdown alerts, late payment surcharges are routinely incurred.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+            <div class="text-indigo-400 font-bold flex items-center gap-2">
+              <span>👥</span> Ambiguous Family Cost Splitting
+            </div>
+            <p class="text-slate-300 leading-relaxed text-xs">
+              When family members or co-living roommates contribute to shared provisions, determining who paid what and calculating proportional spending shares creates friction.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+            <div class="text-teal-400 font-bold flex items-center gap-2">
+              <span>🚫</span> Lack of Real-Time Health Metrics
+            </div>
+            <p class="text-slate-300 leading-relaxed text-xs">
+              Bank passbooks show past debit records but provide no category budget ceilings, visual charts, or early warning triggers before a category limit is breached.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>HomeLedger Pro • Problem Statement</span>
+        <span>Slide 3 of 15</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 4: PROJECT OBJECTIVES ==================== -->
+    <section id="slide-4" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">04 / Objectives</span>
+        <span class="tag-badge bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">Target Outcomes</span>
+      </div>
+
+      <div class="my-auto space-y-5">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-white">Specific Project Objectives</h2>
+          <p class="text-sm text-slate-400 mt-1">Measurable functional goals achieved in this engineering project</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 text-xs">
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+            <div class="text-indigo-400 font-bold text-sm">1. Full Ledger Engine</div>
+            <p class="text-slate-300">Track multi-category income and expense transactions with member attribution and payment method tagging (UPI, Cash, Card).</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+            <div class="text-emerald-400 font-bold text-sm">2. Category Envelopes</div>
+            <p class="text-slate-300">Set monthly spending limits for 15+ household categories with visual color-coded thresholds (Green &lt;80%, Red &gt;100%).</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+            <div class="text-amber-400 font-bold text-sm">3. Due-Date Management</div>
+            <p class="text-slate-300">Track recurring utility bills with live overdue countdowns and a 1-click "Pay" action that auto-logs an expense.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+            <div class="text-teal-400 font-bold text-sm">4. Shared Expense Split</div>
+            <p class="text-slate-300">Dynamically compute member spending contributions, percentage distributions, and individual transaction drill-downs.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+            <div class="text-rose-400 font-bold text-sm">5. Role-Based Access</div>
+            <p class="text-slate-300">Enforce strict separation between regular members and verified Master Administrators with dedicated control center.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+            <div class="text-purple-400 font-bold text-sm">6. Data Portability</div>
+            <p class="text-slate-300">Enable one-click Excel CSV export, full encrypted JSON backup/restore, and printable balance sheet views.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>HomeLedger Pro • Objectives</span>
+        <span>Slide 4 of 15</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 5: BACKGROUND / EXISTING SYSTEM ==================== -->
+    <section id="slide-5" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">05 / Background</span>
+        <span class="tag-badge bg-slate-800 text-slate-300">Literature &amp; Market Context</span>
+      </div>
+
+      <div class="my-auto space-y-6">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-white">Existing Systems vs. Household Needs</h2>
+          <p class="text-sm text-slate-400 mt-1">Comparative assessment of currently available finance solutions</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2.5">
+            <div class="text-amber-400 font-bold text-sm">1. Spreadsheets (Excel / Sheets)</div>
+            <ul class="text-slate-300 space-y-1.5">
+              <li>• Require manual formula maintenance and data entry.</li>
+              <li>• Poor mobile smartphone user experience.</li>
+              <li>• Lack automated overdue bill alerts and live health score calculations.</li>
+            </ul>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2.5">
+            <div class="text-rose-400 font-bold text-sm">2. Commercial Banking Apps</div>
+            <ul class="text-slate-300 space-y-1.5">
+              <li>• Limited strictly to accounts within that single bank.</li>
+              <li>• Cannot record cash payments or external UPI transactions easily.</li>
+              <li>• Zero support for family member cost attribution or shared envelope budgeting.</li>
+            </ul>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2.5">
+            <div class="text-indigo-400 font-bold text-sm">3. Peer-to-Peer Split Apps</div>
+            <ul class="text-slate-300 space-y-1.5">
+              <li>• Designed primarily for one-time trip bill sharing.</li>
+              <li>• Lack utility bill management, monthly budget ceilings, and income reconciliation.</li>
+              <li>• Often contain heavy intrusive advertisements and privacy concerns.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>HomeLedger Pro • Existing System Analysis</span>
+        <span>Slide 5 of 15</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 6: PROPOSED SOLUTION ==================== -->
+    <section id="slide-6" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">06 / Proposed Solution</span>
+        <span class="tag-badge bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">The HomeLedger Pro Architecture</span>
+      </div>
+
+      <div class="my-auto space-y-6">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-white">Unified Household Financial Intelligence</h2>
+          <p class="text-sm text-slate-400 mt-1">An integrated, single-page application combining ledger, bills, envelopes, and analytics</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+          <div class="p-5 rounded-2xl bg-slate-900/90 border border-indigo-500/20 space-y-2">
+            <div class="text-indigo-400 font-bold flex items-center gap-2">
+              <span>⚡</span> Fast, Lightweight &amp; Client-Side
+            </div>
+            <p class="text-slate-300 text-xs leading-relaxed">
+              Engineered using React 18 and Vite. State is managed via the React Context API with immediate persistence to browser localStorage, ensuring zero server lag and instant offline availability.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-900/90 border border-emerald-500/20 space-y-2">
+            <div class="text-emerald-400 font-bold flex items-center gap-2">
+              <span>🎯</span> Proactive Rather Than Passive
+            </div>
+            <p class="text-slate-300 text-xs leading-relaxed">
+              Computes a live financial health score (0–100) and triggers automated rule-based Smart Advisor alerts (danger, warning, success, info) when categories approach or exceed budget limits.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-900/90 border border-teal-500/20 space-y-2">
+            <div class="text-teal-400 font-bold flex items-center gap-2">
+              <span>🏠</span> Built Specifically for the Household Unit
+            </div>
+            <p class="text-slate-300 text-xs leading-relaxed">
+              Utility bills (electricity, WiFi, water) and recurring domestic expenses are tied directly to members, giving complete transparency over who contributes what each month.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-900/90 border border-purple-500/20 space-y-2">
+            <div class="text-purple-400 font-bold flex items-center gap-2">
+              <span>🔒</span> Zero Compromise Privacy &amp; Control
+            </div>
+            <p class="text-slate-300 text-xs leading-relaxed">
+              Personal data never leaves the user's browser without explicit export. Only the designated administrator email can unlock user audit logs and management controls.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>HomeLedger Pro • Proposed Solution</span>
+        <span>Slide 6 of 15</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 7: SYSTEM ARCHITECTURE ==================== -->
+    <section id="slide-7" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">07 / System Architecture</span>
+        <span class="tag-badge bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">Data Flow &amp; Hierarchy</span>
+      </div>
+
+      <div class="my-auto space-y-5">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-white">System Architecture &amp; Component Flow</h2>
+          <p class="text-sm text-slate-400 mt-1">High-level declarative view of components, providers, and state lifecycle</p>
+        </div>
+
+        <!-- ASCII Architecture Block -->
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 font-mono text-[11px] sm:text-xs text-slate-300 space-y-2 overflow-x-auto">
+          <div class="text-indigo-400 font-bold">[USER CLIENT BROWSER]</div>
+          <div class="text-slate-400">├── Presentation Layer: App.jsx ➔ Navbar ➔ Views (Dashboard | Expenses | Budgets | Bills | Family | Admin)</div>
+          <div class="text-slate-400">├── State Management Layer (React Context API):</div>
+          <div class="text-slate-300 pl-4">│   ├── <span class="text-emerald-400 font-bold">AuthContext.jsx:</span> User Sessions, Role Guards, Login/Signup, 3-Step Password Reset, Audit Logs</div>
+          <div class="text-slate-300 pl-4">│   └── <span class="text-teal-400 font-bold">BudgetContext.jsx:</span> Transactions, 15 Categories, Recurring Bills, Members, Health Metrics</div>
+          <div class="text-slate-400">├── Data Visualizations: Chart.js 4 (Doughnut Category Chart, Daily Line Chart, Budget Bar Chart)</div>
+          <div class="text-slate-400">└── Local Persistence: Web Storage API (localStorage: homeledger_pro_v1, homeledger_all_users_v2)</div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+            <strong class="text-indigo-300 block mb-1">Unidirectional Flow</strong>
+            <p class="text-slate-400">Actions dispatch into Context, state updates reactively, recalculating all metrics and triggering auto-rerenders.</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+            <strong class="text-emerald-300 block mb-1">State Guards</strong>
+            <p class="text-slate-400">Unauthenticated traffic is caught by session guards; non-admins attempting admin tabs are auto-routed to dashboard.</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+            <strong class="text-teal-300 block mb-1">Zero Backend Dependency</strong>
+            <p class="text-slate-400">Completely self-contained. No external database or API keys required to execute the full functional suite.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>HomeLedger Pro • Architecture</span>
+        <span>Slide 7 of 15</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 8: TECHNOLOGY STACK ==================== -->
+    <section id="slide-8" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">08 / Technology Stack</span>
+        <span class="tag-badge bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Verified Codebase Dependencies</span>
+      </div>
+
+      <div class="my-auto space-y-6">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-white">Technologies Utilized in Current Project</h2>
+          <p class="text-sm text-slate-400 mt-1">Honest technical inventory directly derived from <code class="text-indigo-300">package.json</code></p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+            <span class="text-slate-500 font-mono text-[10px] uppercase font-bold block">UI Framework</span>
+            <div class="text-white font-bold text-base">React 18.3</div>
+            <p class="text-slate-400 text-[11px]">Hooks, functional components, Context API state management.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+            <span class="text-slate-500 font-mono text-[10px] uppercase font-bold block">Build Engine</span>
+            <div class="text-white font-bold text-base">Vite 6.0</div>
+            <p class="text-slate-400 text-[11px]">Next-generation frontend tooling with rapid Hot Module Replacement.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+            <span class="text-slate-500 font-mono text-[10px] uppercase font-bold block">Styling</span>
+            <div class="text-white font-bold text-base">Tailwind CSS 3.4</div>
+            <p class="text-slate-400 text-[11px]">Utility-first design tokens, custom responsive dark/light theme.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+            <span class="text-slate-500 font-mono text-[10px] uppercase font-bold block">Analytics</span>
+            <div class="text-white font-bold text-base">Chart.js 4.4</div>
+            <p class="text-slate-400 text-[11px]">Dynamic Doughnut, Line, and Bar charts via react-chartjs-2.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+            <span class="text-slate-500 font-mono text-[10px] uppercase font-bold block">Icons</span>
+            <div class="text-white font-bold text-base">Lucide React</div>
+            <p class="text-slate-400 text-[11px]">Clean, consistent vector icon suite for all navigation and actions.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+            <span class="text-slate-500 font-mono text-[10px] uppercase font-bold block">Data Storage</span>
+            <div class="text-white font-bold text-base">Web LocalStorage</div>
+            <p class="text-slate-400 text-[11px]">Synchronous key-value browser storage with JSON serialization.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+            <span class="text-slate-500 font-mono text-[10px] uppercase font-bold block">Source Control</span>
+            <div class="text-white font-bold text-base">Git &amp; GitHub</div>
+            <p class="text-slate-400 text-[11px]">Continuous integration with automated main branch push tracking.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+            <span class="text-slate-500 font-mono text-[10px] uppercase font-bold block">Cloud Hosting</span>
+            <div class="text-white font-bold text-base">Render Cloud</div>
+            <p class="text-slate-400 text-[11px]">Automated static site deployment with live global CDN distribution.</p>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+          <span>*Academic Disclosure: This project is implemented as an offline-first client application; it deliberately does not use external SQL/NoSQL databases or third-party paid APIs.</span>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>HomeLedger Pro • Tech Stack</span>
+        <span>Slide 8 of 15</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 9: KEY FEATURES ==================== -->
+    <section id="slide-9" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">09 / Implemented Features</span>
+        <span class="tag-badge bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">Feature Matrix</span>
+      </div>
+
+      <div class="my-auto space-y-5">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-white">Key Functional Modules in HomeLedger Pro</h2>
+          <p class="text-sm text-slate-400 mt-1">Exclusively reflecting capabilities actually present in the codebase</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 text-xs">
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-indigo-500/20 space-y-1.5">
+            <div class="text-indigo-400 font-bold text-sm">🔐 Multi-User Authentication</div>
+            <p class="text-slate-300">Sign in, create account, local Google identity simulation, and 3-step password reset with email check.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-emerald-500/20 space-y-1.5">
+            <div class="text-emerald-400 font-bold text-sm">📊 Executive Dashboard &amp; Score</div>
+            <p class="text-slate-300">Total inflow, outflow, balance, savings percentage, and automated 0–100 spending health score.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-teal-500/20 space-y-1.5">
+            <div class="text-teal-400 font-bold text-sm">💸 Categorized Expense Ledger</div>
+            <p class="text-slate-300">Transaction records across 15+ categories with search, multi-filter, inline editing, and deletion.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-amber-500/20 space-y-1.5">
+            <div class="text-amber-400 font-bold text-sm">📁 Category Budget Envelopes</div>
+            <p class="text-slate-300">Monthly budget caps with live visual progress bars and dynamic threshold warnings (Safe, Approaching, Overdue).</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-rose-500/20 space-y-1.5">
+            <div class="text-rose-400 font-bold text-sm">⏰ Smart Bill Due-Date Tracker</div>
+            <p class="text-slate-300">Tracks Electricity, WiFi, Water, Staff salary with countdown badges and 1-click "Pay" &amp; auto-record.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-purple-500/20 space-y-1.5">
+            <div class="text-purple-400 font-bold text-sm">👥 Family Split &amp; Admin Portal</div>
+            <p class="text-slate-300">Family member spending attribution with drill-down, plus owner-only user directory and activity audit logs.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>HomeLedger Pro • Key Features</span>
+        <span>Slide 9 of 15</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 10: DASHBOARD & OVERVIEW ==================== -->
+    <section id="slide-10" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">10 / Executive Dashboard</span>
+        <span class="tag-badge bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">MetricCards &amp; AnalyticsCharts</span>
+      </div>
+
+      <div class="my-auto space-y-5">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-white">Dashboard &amp; Financial Health Overview</h2>
+          <p class="text-sm text-slate-400 mt-1">Real-time KPI aggregation and multi-dimensional Chart.js visualizations</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div class="p-4 rounded-xl bg-slate-900 border border-emerald-500/30">
+            <span class="text-[10px] uppercase font-bold text-slate-400">Total Inflow</span>
+            <div class="text-xl sm:text-2xl font-black text-emerald-400 mt-1">₹85,000</div>
+            <span class="text-[10px] text-slate-500">Active monthly income</span>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-rose-500/30">
+            <span class="text-[10px] uppercase font-bold text-slate-400">Total Outflow</span>
+            <div class="text-xl sm:text-2xl font-black text-rose-400 mt-1">₹42,500</div>
+            <span class="text-[10px] text-slate-500">Expenses logged</span>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-indigo-500/30">
+            <span class="text-[10px] uppercase font-bold text-slate-400">Net Balance</span>
+            <div class="text-xl sm:text-2xl font-black text-indigo-300 mt-1">₹42,500</div>
+            <span class="text-[10px] text-slate-500">Available liquidity</span>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-amber-500/30">
+            <span class="text-[10px] uppercase font-bold text-slate-400">Health Score</span>
+            <div class="text-xl sm:text-2xl font-black text-amber-300 mt-1">78 / 100</div>
+            <span class="text-[10px] text-emerald-400 font-semibold">Good &amp; Stable</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-indigo-400 font-bold mb-1">🍩 Doughnut Analytics</div>
+            <p class="text-slate-400">Visualizes category distribution, displaying proportions spent on groceries, utilities, and transport.</p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-emerald-400 font-bold mb-1">📈 Line Chart Trajectory</div>
+            <p class="text-slate-400">Shows day-by-day cumulative expenditure trend against the monthly income curve.</p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-teal-400 font-bold mb-1">📊 Bar Chart Variance</div>
+            <p class="text-slate-400">Compares budgeted ceiling limits against actual expenditure across individual categories.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>HomeLedger Pro • Executive Dashboard</span>
+        <span>Slide 10 of 15</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 11: EXPENSE & BUDGET ==================== -->
+    <section id="slide-11" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">11 / Ledger &amp; Budgets</span>
+        <span class="tag-badge bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">ExpenseList &amp; CategoryBudgetCard</span>
+      </div>
+
+      <div class="my-auto grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+        <div class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-extrabold font-heading text-white">Expense Ledger &amp; Budget Caps</h2>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Transactions are recorded via a modal with category tagging, payment method selection (UPI, Cash, Card, Net Banking), and member assignment.
+          </p>
+          <div class="space-y-2 text-xs text-slate-300">
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <strong class="text-emerald-400">🔍 Live Multi-Filtering &amp; Search</strong>
+              <p class="text-slate-400 mt-0.5">Filter dynamically by Type (Expense/Income), Category, Member, and Payment mode.</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <strong class="text-indigo-400">✏️ Inline Actions &amp; Excel CSV</strong>
+              <p class="text-slate-400 mt-0.5">Edit or delete entries with instant balance recomputation. Export full monthly records to CSV.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 text-xs">
+          <div class="font-bold text-slate-400 uppercase text-[10px]">Budget Envelope Enforcement Model</div>
+
+          <div class="space-y-2.5">
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>🥗 Food &amp; Groceries</span>
+                <span class="text-amber-400 font-mono font-bold">₹8,800 / ₹10,000 (88%)</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-amber-400 h-full rounded-full" style="width: 88%;"></div>
+              </div>
+              <span class="text-[10px] text-amber-400 mt-0.5 block">🟡 Warning: Approaching ceiling</span>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>⚡ Electricity &amp; Utilities</span>
+                <span class="text-rose-400 font-mono font-bold">₹3,450 / ₹3,000 (115%)</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-rose-500 h-full rounded-full" style="width: 100%;"></div>
+              </div>
+              <span class="text-[10px] text-rose-400 mt-0.5 block font-bold">🔴 Danger: Budget exceeded!</span>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>🚗 Transport &amp; Fuel</span>
+                <span class="text-emerald-400 font-mono font-bold">₹2,100 / ₹5,000 (42%)</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-400 h-full rounded-full" style="width: 42%;"></div>
+              </div>
+              <span class="text-[10px] text-emerald-400 mt-0.5 block">🟢 Safe: Well within envelope</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>HomeLedger Pro • Ledger &amp; Budgets</span>
+        <span>Slide 11 of 15</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 12: SMART BILLS & FAMILY SPLIT ==================== -->
+    <section id="slide-12" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">12 / Bills &amp; Family Split</span>
+        <span class="tag-badge bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">BillManager &amp; FamilySplitView</span>
+      </div>
+
+      <div class="my-auto grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+        <!-- Smart Bill Manager -->
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 text-xs">
+          <div class="flex justify-between items-center">
+            <h3 class="font-bold text-white text-sm">Smart Bill Due-Date Manager</h3>
+            <span class="text-[10px] text-rose-400 bg-rose-950/60 px-2 py-0.5 rounded border border-rose-900 font-bold">Active Deadlines</span>
+          </div>
+          <p class="text-slate-400 text-xs">Tracks electricity, WiFi, water, and staff salary with automated countdown status:</p>
+          <div class="space-y-2 font-mono">
+            <div class="p-2 rounded bg-slate-950 border border-rose-900/60 flex justify-between items-center">
+              <div>
+                <span class="text-rose-400 font-bold text-[10px] block">OVERDUE BY 2D</span>
+                <span class="text-white text-xs">State Electricity Bill</span>
+              </div>
+              <span class="text-rose-400 font-bold text-xs">₹2,840</span>
+            </div>
+            <div class="p-2 rounded bg-slate-950 border border-amber-900/60 flex justify-between items-center">
+              <div>
+                <span class="text-amber-400 font-bold text-[10px] block">DUE IN 3 DAYS</span>
+                <span class="text-white text-xs">Broadband Fiber Wi-Fi</span>
+              </div>
+              <span class="text-amber-400 font-bold text-xs">₹1,199</span>
+            </div>
+          </div>
+          <p class="text-[11px] text-emerald-400 font-bold">⚡ 1-Click Pay: Marks bill settled &amp; automatically records expense transaction.</p>
+        </div>
+
+        <!-- Family Split View -->
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 text-xs">
+          <div class="flex justify-between items-center">
+            <h3 class="font-bold text-white text-sm">Family Expense Split &amp; Attribution</h3>
+            <span class="text-[10px] text-indigo-300 bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-900 font-bold">Shared Costs</span>
+          </div>
+          <p class="text-slate-400 text-xs">Transparent attribution of household expenses across family members or roommates:</p>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between p-2 rounded bg-slate-950 border border-slate-800">
+              <span class="text-white">👩‍💼 Kajal Kumari (Groceries, WiFi)</span>
+              <span class="text-indigo-400 font-bold">₹18,500 (43.5%)</span>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded bg-slate-950 border border-slate-800">
+              <span class="text-white">👨‍💼 Rahul Kumar (Utilities, Fuel)</span>
+              <span class="text-emerald-400 font-bold">₹14,000 (32.9%)</span>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded bg-slate-950 border border-slate-800">
+              <span class="text-white">👵 Mother (Staff Salary, Medical)</span>
+              <span class="text-amber-400 font-bold">₹10,000 (23.6%)</span>
+            </div>
+          </div>
+          <p class="text-[11px] text-slate-400">Clicking on any member drills down into their individual transaction ledger.</p>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>HomeLedger Pro • Bills &amp; Family Split</span>
+        <span>Slide 12 of 15</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 13: ADMIN PORTAL & ROLE ACCESS ==================== -->
+    <section id="slide-13" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">13 / Admin Control</span>
+        <span class="tag-badge bg-amber-500/10 text-amber-300 border border-amber-500/20">AdminDashboard.jsx</span>
+      </div>
+
+      <div class="my-auto space-y-5">
+        <div class="flex justify-between items-end">
+          <div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-white">Owner-Only Administration &amp; Security</h2>
+            <p class="text-sm text-slate-400 mt-1">Role-based controls accessible exclusively to configured master administrator</p>
+          </div>
+          <span class="text-xs font-bold text-amber-300 bg-amber-950/60 px-3 py-1 rounded-lg border border-amber-800 flex items-center gap-1">
+            👑 Master Admin: admin@homeledger.com
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+            <strong class="text-indigo-400 block text-sm">📋 Registered User Directory</strong>
+            <p class="text-slate-400 leading-relaxed">
+              Full table of all accounts with registered name, email, authentication method, role, and registration date.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+            <strong class="text-emerald-400 block text-sm">🔄 Role Management</strong>
+            <p class="text-slate-400 leading-relaxed">
+              Change user roles between regular Member and Admin. Suspend inactive profiles or remove obsolete test accounts.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+            <strong class="text-amber-400 block text-sm">📜 Live Activity Audit Logs</strong>
+            <p class="text-slate-400 leading-relaxed">
+              Time-stamped audit stream logging logins, registrations, password resets, role changes, and system configuration updates.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-950 border border-amber-500/20 text-xs text-slate-300 flex items-center gap-3">
+          <span class="text-base">🛡️</span>
+          <span><strong>Strict Security Implementation:</strong> Regular members never see the Admin Portal tab in their navigation bar. Direct attempts to navigate to the admin view are intercepted by React state guards and redirected to the dashboard.</span>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>HomeLedger Pro • Admin Portal</span>
+        <span>Slide 13 of 15</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 14: TESTING & FUTURE SCOPE ==================== -->
+    <section id="slide-14" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">14 / Testing &amp; Future Scope</span>
+        <span class="tag-badge bg-teal-500/10 text-teal-300 border border-teal-500/20">Validation &amp; Roadmap</span>
+      </div>
+
+      <div class="my-auto grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+        <!-- Testing & Challenges -->
+        <div class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-extrabold font-heading text-white">Testing &amp; Challenges Solved</h2>
+          <div class="space-y-2 text-xs text-slate-300">
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <strong class="text-indigo-400">State Synchronization:</strong>
+              <p class="text-slate-400 mt-0.5">Resolved multi-context updates between AuthContext and BudgetContext without infinite re-render loops.</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <strong class="text-emerald-400">Strict Role Separation:</strong>
+              <p class="text-slate-400 mt-0.5">Fixed initial role leakage so public signups never inherit admin rights, checking email match directly.</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <strong class="text-amber-400">Build &amp; Render Compatibility:</strong>
+              <p class="text-slate-400 mt-0.5">Ensured all Vite bundler modules compile cleanly (1,601 modules transformed with 0 build errors).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Future Scope -->
+        <div class="space-y-4">
+          <h2 class="text-2xl sm:text-3xl font-extrabold font-heading text-white">Future Scope</h2>
+          <div class="space-y-2 text-xs text-slate-300">
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <strong class="text-teal-400">1. Cloud Backend &amp; Real DB:</strong>
+              <p class="text-slate-400 mt-0.5">Migrate from local storage to PostgreSQL / Firebase to enable multi-device synchronization across family phones.</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <strong class="text-purple-400">2. Automated SMS / Bank Sync:</strong>
+              <p class="text-slate-400 mt-0.5">Implement SMS parsing or Account Aggregator (AA) APIs to auto-log utility bill debits without manual input.</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <strong class="text-rose-400">3. Native Mobile Application:</strong>
+              <p class="text-slate-400 mt-0.5">Package using React Native or Capacitor for native push notifications on bill due dates.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>HomeLedger Pro • Validation &amp; Roadmap</span>
+        <span>Slide 14 of 15</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 15: CONCLUSION + Q&A ==================== -->
+    <section id="slide-15" class="slide-container glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 font-mono">15 / Conclusion &amp; Q&amp;A</span>
+        <span class="tag-badge bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Final Slide</span>
+      </div>
+
+      <div class="my-auto text-center space-y-6 max-w-3xl mx-auto">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-emerald-400 flex items-center justify-center text-3xl shadow-xl shadow-indigo-600/30 mx-auto">
+          🏠
+        </div>
+
+        <div class="space-y-2">
+          <h2 class="text-3xl sm:text-5xl font-black font-heading text-white">Thank You!</h2>
+          <p class="text-lg text-emerald-400 font-semibold font-heading">HomeLedger Pro — Smart Home Finance &amp; Expense Management</p>
+        </div>
+
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          HomeLedger Pro demonstrates that a modern, reactive single-page architecture can provide robust, privacy-respecting financial discipline for households without the complexity or cost of external server infrastructures.
+        </p>
+
+        <!-- Q&A Box -->
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-indigo-500/30 text-xs text-slate-300 max-w-lg mx-auto">
+          <span class="text-indigo-400 font-bold uppercase text-[11px] tracking-wider block mb-1">Open for Discussion</span>
+          <p class="text-sm font-bold text-white">Questions &amp; Answers (Q&amp;A)</p>
+          <p class="text-[11px] text-slate-400 mt-1">Ready for technical viva and demonstration questions from evaluators.</p>
+        </div>
+
+        <div class="pt-2 text-xs text-slate-400 flex flex-wrap justify-center gap-4">
+          <span>Candidate: <strong class="text-white">Kajal Kumari</strong></span>
+          <span>•</span>
+          <span>B.Tech CSE</span>
+          <span>•</span>
+          <span>Sandip University</span>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-500 flex justify-between">
+        <span>smart-home-budget-tracker.onrender.com</span>
+        <span>Slide 15 of 15</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== SPEAKER NOTES MODAL (HINDI + ENGLISH) ==================== -->
+  <aside id="speakerNotesModal" class="no-print hidden fixed bottom-4 right-4 max-w-md w-full bg-[#0D1424] border border-amber-500/40 p-4 rounded-2xl shadow-2xl backdrop-blur-md z-50 text-xs">
+    <div class="flex justify-between items-center pb-2 border-b border-slate-800 mb-2">
+      <div class="flex items-center gap-1.5 text-amber-400 font-bold">
+        <span>💬</span>
+        <span>Viva Speaker Notes (Hindi-English)</span>
+      </div>
+      <button onclick="toggleSpeakerNotes()" class="text-slate-400 hover:text-white font-bold text-sm">✕</button>
+    </div>
+    <div id="speakerNotesText" class="text-slate-200 leading-relaxed max-h-56 overflow-y-auto">
+      <!-- Injected via JavaScript -->
+    </div>
+  </aside>
+
+  <!-- ==================== PRESENTATION JAVASCRIPT ==================== -->
+  <script>
+    const totalSlides = 15;
+    let currentSlide = 1;
+
+    // Academic viva speaker notes for Kajal Kumari
+    const speakerNotes = {
+      1: "Namaste respected evaluators and committee members. My name is Kajal Kumari, and my B.Tech CSE final year project is 'HomeLedger Pro — Smart Home Finance & Expense Management'. It is a client-side reactive web application built to streamline household expense recording, utility bill deadlines, and family expense sharing.",
+      2: "About me: I am Kajal Kumari, a final year student of Bachelor of Technology in Computer Science & Engineering at Sandip University. This project was developed as my final year capstone project.",
+      3: "Problem Statement: Most Indian families track finances informally on paper or WhatsApp. As a result, bills are paid late, family expense contributions remain unclear, and by month-end, there is no visibility into where money was spent.",
+      4: "Project Objectives: We targeted six concrete outcomes: complete categorized expense logging, category budget caps with visual warnings, a smart bill manager with overdue countdowns, family member cost attribution, strict role-based access control, and Excel/JSON data export.",
+      5: "Existing System Analysis: Traditional spreadsheets like Excel require manual formula maintenance and lack automated alerts. Banking apps only show their own account transactions and cannot handle cash or shared family splits. Peer-to-peer split apps lack household utility bill tracking.",
+      6: "Proposed Solution: HomeLedger Pro brings everything into one unified single-page web app. It calculates a real-time spending health score, triggers automated Smart Advisor warnings, attributes expenses to family members, and protects data privacy by operating offline-first.",
+      7: "System Architecture: The architecture has three clean layers: a React 18 component tree on top, a state management layer using React Context API (AuthContext and BudgetContext), and synchronous client storage via the browser LocalStorage API. No external server dependency is needed.",
+      8: "Technology Stack: We strictly used: React 18.3, Vite 6.0 bundler, Tailwind CSS 3.4 for utility-first styling, Chart.js 4.4 for dynamic graphs, and Lucide React icons. Code is version-controlled on GitHub and deployed on Render Cloud.",
+      9: "Key Features: The actual implemented modules are: Multi-user authentication with 3-step password reset, Executive Dashboard with financial health score, 15-category expense ledger with live filtering, Category budget envelopes, Smart bill due-date manager, Family expense split, and Owner-only Admin Portal.",
+      10: "Dashboard: The dashboard displays four live KPI cards (Inflow, Outflow, Net Balance, Health Score), followed by three Chart.js visual charts: Category Doughnut, Daily Line trajectory, and Budget Envelope variance bar chart.",
+      11: "Expense Ledger & Budget Caps: Transactions are categorized across 15 household categories with payment modes (UPI, Cash, Card). The category budget envelope model fills progress bars and turns amber at 80% and red beyond 100%.",
+      12: "Smart Bills & Family Split: Bill Manager monitors electricity, WiFi, and water bills with dynamic badges like 'Overdue by 2d' or 'Due in 3d', with 1-click 'Pay & Record'. Family Split displays each member's total spend and percentage share with single-member drill-down.",
+      13: "Admin Portal & Role Access: Regular users see only their member dashboard. Logging in with the master admin email (admin@homeledger.com) unlocks the Admin Portal containing the registered user directory, role promotion/demotion, account status toggles, and live activity audit logs.",
+      14: "Testing & Challenges Solved: We resolved multi-context state synchronization, ensured strict email-based role separation so regular signups never inherit admin rights, and verified clean Vite production builds with 1,601 modules transformed and zero errors. Future scope includes cloud DB migration and SMS bank sync.",
+      15: "Conclusion & Q&A: In conclusion, HomeLedger Pro delivers a complete, production-ready household finance platform. Thank you for your time and guidance. I am now open for any technical viva questions and live demonstration."
+    };
+
+    function initSlidePills() {
+      const container = document.getElementById('slidePills');
+      if (!container) return;
+      container.innerHTML = '';
+      for (let i = 1; i <= totalSlides; i++) {
+        const btn = document.createElement('button');
+        btn.id = `pill-btn-${i}`;
+        btn.textContent = i;
+        btn.className = `w-7 h-6 rounded-lg text-xs font-bold transition flex items-center justify-center ${i === 1 ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`;
+        btn.onclick = () => showSlide(i);
+        container.appendChild(btn);
+      }
+    }
+
+    function showSlide(index) {
+      if (index < 1 || index > totalSlides) return;
+      currentSlide = index;
+
+      // Ensure all slides are hidden
+      document.querySelectorAll('.slide-container').forEach(el => {
+        el.classList.remove('active');
+        el.style.setProperty('display', 'none', 'important');
+      });
+
+      // Display the selected slide
+      const activeSlide = document.getElementById(`slide-${index}`);
+      if (activeSlide) {
+        activeSlide.classList.add('active');
+        activeSlide.style.setProperty('display', 'flex', 'important');
+      }
+
+      // Update Header Indicator
+      const numDisplay = document.getElementById('slideNumberDisplay');
+      if (numDisplay) numDisplay.textContent = `Slide ${index} of ${totalSlides}`;
+
+      // Update Speaker Notes
+      const notesBox = document.getElementById('speakerNotesText');
+      if (notesBox) notesBox.textContent = speakerNotes[index] || "Slide notes.";
+
+      // Update Pill Highlights
+      for (let i = 1; i <= totalSlides; i++) {
+        const pill = document.getElementById(`pill-btn-${i}`);
+        if (pill) {
+          if (i === index) {
+            pill.className = 'w-7 h-6 rounded-lg text-xs font-bold transition flex items-center justify-center bg-indigo-600 text-white shadow-sm shadow-indigo-600/50';
+          } else {
+            pill.className = 'w-7 h-6 rounded-lg text-xs font-bold transition flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800';
+          }
+        }
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        showSlide(currentSlide + 1);
+      } else {
+        showSlide(1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        showSlide(currentSlide - 1);
+      } else {
+        showSlide(totalSlides);
+      }
+    }
+
+    function toggleSpeakerNotes() {
+      const panel = document.getElementById('speakerNotesModal');
+      if (panel) panel.classList.toggle('hidden');
+    }
+
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      }
+    });
+
+    // Initialize on load
+    initSlidePills();
+    showSlide(1);
+    window.addEventListener('DOMContentLoaded', () => {
+      showSlide(1);
+    });
+  </script>
+</body>
+</html>

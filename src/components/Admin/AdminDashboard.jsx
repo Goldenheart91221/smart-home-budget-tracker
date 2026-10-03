@@ -333,7 +333,7 @@ export const AdminDashboard = () => {
                     {/* User Info */}
                     <td className="py-4 px-5">
                       <div className="flex items-center gap-3">
-                        {u.avatarType === 'image' ? (
+                        {u.avatarType === 'image' || (typeof u.avatar === 'string' && u.avatar.startsWith('http')) ? (
                           <img
                             src={u.avatar}
                             alt={u.name}
@@ -341,7 +341,7 @@ export const AdminDashboard = () => {
                           />
                         ) : (
                           <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xl">
-                            {u.avatar || '👤'}
+                            {u.avatar && !u.avatar.startsWith('http') ? u.avatar : '👤'}
                           </div>
                         )}
                         <div>

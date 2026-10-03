@@ -46,9 +46,17 @@ const DashboardView = () => {
       {/* Welcome Banner */}
       <div className="bg-gradient-to-r from-indigo-900/40 via-purple-900/30 to-slate-900/40 border border-indigo-500/20 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="text-2xl sm:text-3xl p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
-            {currentUser?.avatar || '👋'}
-          </div>
+          {currentUser?.avatarType === 'image' || (typeof currentUser?.avatar === 'string' && currentUser.avatar.startsWith('http')) ? (
+            <img
+              src={currentUser.avatar}
+              alt={currentUser.name}
+              className="w-11 h-11 rounded-xl object-cover ring-2 ring-indigo-500/30 shadow-md"
+            />
+          ) : (
+            <div className="text-2xl sm:text-3xl p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+              {currentUser?.avatar && !currentUser.avatar.startsWith('http') ? currentUser.avatar : '👋'}
+            </div>
+          )}
           <div>
             <h2 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
               <span>Welcome back, {currentUser?.name}!</span>

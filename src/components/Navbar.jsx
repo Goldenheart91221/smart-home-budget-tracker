@@ -201,7 +201,7 @@ export const Navbar = () => {
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
                   className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 transition"
                 >
-                  {currentUser.avatarType === 'image' ? (
+                  {currentUser.avatarType === 'image' || (typeof currentUser.avatar === 'string' && currentUser.avatar.startsWith('http')) ? (
                     <img
                       src={currentUser.avatar}
                       alt={currentUser.name}
@@ -209,7 +209,7 @@ export const Navbar = () => {
                     />
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-base">
-                      {currentUser.avatar || '👤'}
+                      {currentUser.avatar && !currentUser.avatar.startsWith('http') ? currentUser.avatar : '👤'}
                     </div>
                   )}
 
