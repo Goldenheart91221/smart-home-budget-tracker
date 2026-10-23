@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 export const MetricCards = () => {
-  const { metrics, data } = useBudget();
+  const { metrics, data, openAddModal } = useBudget();
   const { 
     totalIncome, 
     totalExpenses, 
@@ -45,22 +45,31 @@ export const MetricCards = () => {
         <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-emerald-500/10 to-transparent rounded-bl-full pointer-events-none" />
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-            Total Inflow
+            Total Income
           </span>
-          <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+          <button
+            onClick={() => openAddModal && openAddModal('income')}
+            className="w-9 h-9 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition"
+            title="Add New Income"
+          >
             <TrendingUp className="w-5 h-5" />
-          </div>
+          </button>
         </div>
         <div className="mt-3">
           <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             {currency}{totalIncome.toLocaleString()}
           </div>
-          <div className="mt-2 flex items-center text-xs text-slate-500 dark:text-slate-400">
-            <span className="inline-flex items-center text-emerald-600 dark:text-emerald-400 font-semibold mr-1.5">
+          <div className="mt-2 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+            <span className="inline-flex items-center text-emerald-600 dark:text-emerald-400 font-semibold">
               <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" />
-              100%
+              Inflow
             </span>
-            <span>Recorded household inflows</span>
+            <button
+              onClick={() => openAddModal && openAddModal('income')}
+              className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline"
+            >
+              + Add Income
+            </button>
           </div>
         </div>
       </div>
@@ -70,33 +79,42 @@ export const MetricCards = () => {
         <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-rose-500/10 to-transparent rounded-bl-full pointer-events-none" />
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-            Total Household Spent
+            Total Expenses
           </span>
-          <div className="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+          <button
+            onClick={() => openAddModal && openAddModal('expense')}
+            className="w-9 h-9 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/50 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 flex items-center justify-center transition"
+            title="Add New Expense"
+          >
             <TrendingDown className="w-5 h-5" />
-          </div>
+          </button>
         </div>
         <div className="mt-3">
           <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             {currency}{totalExpenses.toLocaleString()}
           </div>
-          <div className="mt-2 flex items-center text-xs text-slate-500 dark:text-slate-400">
-            <span className={`inline-flex items-center font-semibold mr-1.5 ${
+          <div className="mt-2 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+            <span className={`inline-flex items-center font-semibold ${
               budgetUsedPercent > 100 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-600 dark:text-slate-300'
             }`}>
-              {budgetUsedPercent}%
+              {budgetUsedPercent}% of budget
             </span>
-            <span>of monthly budget limit</span>
+            <button
+              onClick={() => openAddModal && openAddModal('expense')}
+              className="text-rose-600 dark:text-rose-400 font-bold hover:underline"
+            >
+              + Add Expense
+            </button>
           </div>
         </div>
       </div>
 
-      {/* 3. Leftover Balance & Savings Rate */}
+      {/* 3. Remaining Balance (Total Income - Total Expenses) */}
       <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition">
         <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-indigo-500/10 to-transparent rounded-bl-full pointer-events-none" />
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-            Net Savings & Balance
+            Remaining Balance
           </span>
           <div className="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
             <PiggyBank className="w-5 h-5" />
@@ -108,11 +126,11 @@ export const MetricCards = () => {
           }`}>
             {balance < 0 ? '-' : ''}{currency}{Math.abs(balance).toLocaleString()}
           </div>
-          <div className="mt-2 flex items-center text-xs text-slate-500 dark:text-slate-400">
-            <span className="inline-flex items-center text-indigo-600 dark:text-indigo-400 font-bold mr-1.5">
-              {savingsRate}%
+          <div className="mt-2 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+            <span className="text-slate-400">Income − Expenses</span>
+            <span className="inline-flex items-center text-indigo-600 dark:text-indigo-400 font-bold">
+              {savingsRate}% saved
             </span>
-            <span>Savings rate retention</span>
           </div>
         </div>
       </div>

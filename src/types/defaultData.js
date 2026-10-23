@@ -123,7 +123,18 @@ export const PAYMENT_METHODS = [
   'Credit Card',
   'Debit Card',
   'Net Banking',
-  'Cash'
+  'Direct Bank Transfer / NEFT',
+  'Cash',
+  'Cheque'
+];
+
+export const INCOME_CATEGORIES = [
+  { id: 'Salary', name: 'Salary', icon: 'Briefcase', color: '#10b981' },
+  { id: 'Freelance', name: 'Freelance', icon: 'Laptop', color: '#0ea5e9' },
+  { id: 'Business', name: 'Business', icon: 'Building2', color: '#6366f1' },
+  { id: 'Investment', name: 'Investment', icon: 'TrendingUp', color: '#8b5cf6' },
+  { id: 'Gift', name: 'Gift', icon: 'Gift', color: '#ec4899' },
+  { id: 'Other', name: 'Other', icon: 'Coins', color: '#64748b' }
 ];
 
 export const QUICK_ADD_TEMPLATES = [
@@ -133,6 +144,14 @@ export const QUICK_ADD_TEMPLATES = [
   { title: 'Bread, Eggs & Butter', amount: 140, category: 'groceries', type: 'expense' },
   { title: 'Quick Swiggy / Zomato order', amount: 380, category: 'food_dining', type: 'expense' },
   { title: 'Petrol / Fuel Refill', amount: 1000, category: 'fuel_transport', type: 'expense' },
+];
+
+export const QUICK_INCOME_TEMPLATES = [
+  { title: 'Monthly Salary Credit', amount: 75000, category: 'Salary', type: 'income' },
+  { title: 'Freelance Project Milestone', amount: 18000, category: 'Freelance', type: 'income' },
+  { title: 'Consulting Fee', amount: 12000, category: 'Business', type: 'income' },
+  { title: 'Mutual Fund Dividend / Yield', amount: 3500, category: 'Investment', type: 'income' },
+  { title: 'Family Festival / Birthday Gift', amount: 5000, category: 'Gift', type: 'income' }
 ];
 
 export const getInitialData = () => {

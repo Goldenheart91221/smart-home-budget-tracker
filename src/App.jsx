@@ -22,7 +22,8 @@ import {
   CheckCircle, 
   Receipt, 
   SlidersHorizontal, 
-  Crown
+  Crown,
+  TrendingUp
 } from 'lucide-react';
 
 const DashboardView = () => {
@@ -31,6 +32,7 @@ const DashboardView = () => {
     categorySpendMap, 
     monthTransactions, 
     setActiveTab, 
+    openAddModal,
     setIsAddModalOpen, 
     setEditingTransaction 
   } = useBudget();
@@ -44,7 +46,7 @@ const DashboardView = () => {
     <div className="space-y-6 sm:space-y-8 animate-fadeIn">
       
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-indigo-900/40 via-purple-900/30 to-slate-900/40 border border-indigo-500/20 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div className="bg-gradient-to-r from-indigo-900/40 via-purple-900/30 to-slate-900/40 border border-indigo-500/20 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           {currentUser?.avatarType === 'image' || (typeof currentUser?.avatar === 'string' && currentUser.avatar.startsWith('http')) ? (
             <img
@@ -73,16 +75,39 @@ const DashboardView = () => {
           </div>
         </div>
 
-        {/* ONLY show shortcut if isUserAdmin */}
-        {isUserAdmin && (
+        {/* Action Controls */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Working Add Income Option */}
           <button
-            onClick={() => setActiveTab('admin')}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 text-xs font-bold transition whitespace-nowrap"
+            onClick={() => openAddModal('income')}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 transition transform active:scale-95"
+            title="Log new salary, freelance, or investment income"
           >
-            <Crown className="w-3.5 h-3.5" />
-            <span>Open Admin Portal</span>
+            <TrendingUp className="w-3.5 h-3.5" />
+            <span>Add Income</span>
           </button>
-        )}
+
+          {/* Quick Add Expense Option */}
+          <button
+            onClick={() => openAddModal('expense')}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md shadow-indigo-600/20 transition transform active:scale-95"
+            title="Log household expense"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Add Expense</span>
+          </button>
+
+          {/* ONLY show shortcut if isUserAdmin */}
+          {isUserAdmin && (
+            <button
+              onClick={() => setActiveTab('admin')}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 text-xs font-bold transition whitespace-nowrap"
+            >
+              <Crown className="w-3.5 h-3.5" />
+              <span>Admin Portal</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 1. Top KPI Summary Cards */}
@@ -283,16 +308,18 @@ const DashboardView = () => {
                 <div className="flex items-center gap-3">
                   <div 
                     className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: `${cat.color || '#6366f1'}18` }}
+                    style={{ backgroundColor: isIncome ? 'rgba(16, 185, 129, 0.15)' : `${cat.color || '#6366f1'}18` }}
                   >
-                    <CategoryIcon name={isIncome ? 'TrendingUp' : (cat.icon || 'Receipt')} className="w-4 h-4" color={cat.color} />
+                    <CategoryIcon name={isIncome ? 'TrendingUp' : (cat.icon || 'Receipt')} className="w-4 h-4" color={isIncome ? '#10b981' : cat.color} />
                   </div>
                   <div>
                     <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{tx.title}</p>
                     <div className="flex items-center gap-2 text-xs text-slate-400">
                       <span>{tx.date}</span>
                       <span>•</span>
-                      <span>{cat.name}</span>
+                      <span className={isIncome ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : ''}>
+                        {isIncome ? (tx.category || 'Income') : (cat.name || 'General')}
+                      </span>
                       <span>•</span>
                       <span>{member.avatar} {member.name}</span>
                     </div>
@@ -316,7 +343,7 @@ const DashboardView = () => {
 };
 
 const MainContent = () => {
-  const { activeTab, setActiveTab } = useBudget();
+  const { activeTab, setActiveTab, openAddModal, setIsAddModalOpen } = useBudget();
   const { isUserAdmin } = useAuth();
 
   // STRICT SECURITY GUARD: If activeTab is 'admin' and user is not admin, instantly redirect to dashboard!
@@ -334,16 +361,22 @@ const MainContent = () => {
       {activeTab === 'family' && <FamilySplitView />}
       {activeTab === 'admin' && isUserAdmin && <AdminDashboard />}
 
-      {/* Floating Action Button for Mobile screens */}
-      <div className="fixed bottom-6 right-6 sm:hidden z-30">
+      {/* Floating Action Buttons for Mobile screens */}
+      <div className="fixed bottom-6 right-6 sm:hidden z-30 flex flex-col gap-2 items-end">
         <button
-          onClick={() => {
-            // Handled via context
-          }}
-          className="w-14 h-14 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-700 text-white flex items-center justify-center shadow-xl shadow-indigo-600/40 transform active:scale-90 transition"
-          aria-label="Add transaction"
+          onClick={() => openAddModal ? openAddModal('income') : setIsAddModalOpen(true)}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-emerald-600 text-white font-bold text-xs shadow-lg shadow-emerald-600/40 transform active:scale-90 transition"
+          aria-label="Add Income"
         >
-          <Plus className="w-7 h-7" />
+          <TrendingUp className="w-4 h-4" />
+          <span>+ Income</span>
+        </button>
+        <button
+          onClick={() => openAddModal ? openAddModal('expense') : setIsAddModalOpen(true)}
+          className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-xl shadow-indigo-600/40 transform active:scale-90 transition"
+          aria-label="Add Expense"
+        >
+          <Plus className="w-6 h-6" />
         </button>
       </div>
     </main>
@@ -358,7 +391,7 @@ function AuthenticatedApp() {
   }
 
   return (
-    <BudgetProvider>
+    <BudgetProvider key={currentUser.id}>
       <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-indigo-500 selection:text-white">
         <Navbar />
         <div className="flex-1">

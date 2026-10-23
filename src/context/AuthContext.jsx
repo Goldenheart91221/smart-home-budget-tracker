@@ -59,15 +59,31 @@ export const AuthProvider = ({ children }) => {
     return DEFAULT_USERS;
   });
 
-  // Current logged in user session (null = not logged in, shows Auth screen)
+  // Current logged in user session (null = not logged in, shows Auth screen on fresh session)
   const [currentUser, setCurrentUser] = useState(() => {
     try {
-      const saved = localStorage.getItem(SESSION_STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
+      // Clear legacy localStorage session so fresh browser tabs/windows default to Login
+      localStorage.removeItem(SESSION_STORAGE_KEY);
+
+      // Check tab-scoped sessionStorage
+      const saved = sessionStorage.getItem(SESSION_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const savedUsersRaw = localStorage.getItem(USERS_STORAGE_KEY);
+        const registeredUsers = savedUsersRaw ? JSON.parse(savedUsersRaw) : DEFAULT_USERS;
+        const validUser = registeredUsers.find(
+          u => u.id === parsed.id && u.email?.toLowerCase() === parsed.email?.toLowerCase()
+        );
+        if (validUser && validUser.status === 'active') {
+          return validUser;
+        } else {
+          sessionStorage.removeItem(SESSION_STORAGE_KEY);
+        }
+      }
     } catch (e) {
       console.error('Failed to load session:', e);
     }
-    return null; // Always show login screen on fresh browser/device
+    return null; // Always show login screen on fresh browser/device session
   });
 
   // Activity audit logs
@@ -90,12 +106,14 @@ export const AuthProvider = ({ children }) => {
     }
   }, [users]);
 
-  // Sync currentUser session
+  // Sync currentUser session strictly in sessionStorage (tab-scoped)
   useEffect(() => {
     try {
       if (currentUser) {
-        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(currentUser));
+        sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(currentUser));
+        localStorage.removeItem(SESSION_STORAGE_KEY);
       } else {
+        sessionStorage.removeItem(SESSION_STORAGE_KEY);
         localStorage.removeItem(SESSION_STORAGE_KEY);
       }
     } catch (e) {
@@ -290,6 +308,12 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     if (currentUser) {
       recordActivity('User Logged Out', 'Ended active session', currentUser, 'auth');
+    }
+    try {
+      sessionStorage.removeItem(SESSION_STORAGE_KEY);
+      localStorage.removeItem(SESSION_STORAGE_KEY);
+    } catch (e) {
+      console.error('Error clearing session:', e);
     }
     setCurrentUser(null);
   };

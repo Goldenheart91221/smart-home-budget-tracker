@@ -1,12 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
-import { getInitialData, DEFAULT_CATEGORIES, DEFAULT_MEMBERS } from '../types/defaultData';
+import { useAuth } from './AuthContext';
+import { getInitialData, DEFAULT_CATEGORIES, DEFAULT_MEMBERS, INCOME_CATEGORIES } from '../types/defaultData';
 import confetti from 'canvas-confetti';
 
 const BudgetContext = createContext();
 
-const STORAGE_KEY = 'homeledger_pro_v1';
+export { INCOME_CATEGORIES };
 
 export const BudgetProvider = ({ children }) => {
+  const { currentUser } = useAuth();
+  const userStorageKey = currentUser?.id ? `homeledger_data_${currentUser.id}` : 'homeledger_guest_data';
+
   // Theme state
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('homeledger_theme');
@@ -20,13 +24,38 @@ export const BudgetProvider = ({ children }) => {
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   });
 
-  // Main data state
+  // Main data state scoped to current authenticated user
   const [data, setData] = useState(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const userKey = currentUser?.id ? `homeledger_data_${currentUser.id}` : 'homeledger_guest_data';
+      const saved = localStorage.getItem(userKey);
       if (saved) {
         return JSON.parse(saved);
       }
+
+      // Check legacy storage key for Admin / Owner account
+      if (currentUser?.id === 'usr-admin-1' || currentUser?.email === 'admin@homeledger.com') {
+        const legacy = localStorage.getItem('homeledger_pro_v1');
+        if (legacy) {
+          try {
+            return JSON.parse(legacy);
+          } catch (e) {}
+        }
+        return getInitialData();
+      }
+
+      // For newly registered real users: clean ledger with 0 fake/hardcoded transactions!
+      return {
+        transactions: [],
+        bills: [],
+        categories: DEFAULT_CATEGORIES,
+        members: [
+          { id: 'm1', name: currentUser?.name || 'Self', role: 'Head of Home', avatar: currentUser?.avatar || '👨‍💼', color: 'indigo' }
+        ],
+        currency: '₹',
+        currencyCode: 'INR',
+        monthlyIncomeGoal: 0
+      };
     } catch (e) {
       console.error('Failed to parse saved state, using default data:', e);
     }
@@ -38,8 +67,15 @@ export const BudgetProvider = ({ children }) => {
 
   // Modal states
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [addModalType, setAddModalType] = useState('expense'); // 'expense' | 'income'
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+
+  const openAddModal = (type = 'expense') => {
+    setEditingTransaction(null);
+    setAddModalType(type);
+    setIsAddModalOpen(true);
+  };
 
   // Sync darkMode class on html root
   useEffect(() => {
@@ -52,14 +88,16 @@ export const BudgetProvider = ({ children }) => {
     }
   }, [darkMode]);
 
-  // Sync data with localStorage
+  // Sync data with localStorage using user-specific storage key
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      if (userStorageKey) {
+        localStorage.setItem(userStorageKey, JSON.stringify(data));
+      }
     } catch (e) {
       console.error('Failed to save to localStorage:', e);
     }
-  }, [data]);
+  }, [data, userStorageKey]);
 
   const toggleDarkMode = () => setDarkMode(prev => !prev);
 
@@ -253,12 +291,32 @@ export const BudgetProvider = ({ children }) => {
 
   // Actions
   const addTransaction = (tx) => {
+    const amt = parseFloat(tx.amount);
+    if (isNaN(amt) || amt <= 0) {
+      throw new Error('Transaction amount must be greater than 0.');
+    }
+    if (!tx.title || !tx.title.trim()) {
+      throw new Error('Title / income source is required.');
+    }
+
+    const txDate = tx.date || new Date().toISOString().split('T')[0];
     const newTx = {
       ...tx,
       id: tx.id || `tx-${Date.now()}`,
-      amount: Number(tx.amount) || 0,
-      date: tx.date || new Date().toISOString().split('T')[0]
+      title: tx.title.trim(),
+      amount: amt,
+      type: tx.type === 'income' ? 'income' : 'expense',
+      category: tx.category || (tx.type === 'income' ? 'Salary' : 'groceries'),
+      date: txDate,
+      notes: tx.notes || ''
     };
+
+    // If transaction date is in a different month, switch to that month so the user sees it immediately
+    const txMonth = txDate.slice(0, 7);
+    if (txMonth && txMonth !== selectedMonth) {
+      setSelectedMonth(txMonth);
+    }
+
     setData(prev => ({
       ...prev,
       transactions: [newTx, ...prev.transactions]
@@ -276,6 +334,7 @@ export const BudgetProvider = ({ children }) => {
         // ignore
       }
     }
+    return newTx;
   };
 
   const editTransaction = (id, updated) => {
@@ -417,10 +476,14 @@ export const BudgetProvider = ({ children }) => {
         // Modals
         isAddModalOpen,
         setIsAddModalOpen,
+        addModalType,
+        setAddModalType,
+        openAddModal,
         editingTransaction,
         setEditingTransaction,
         isExportModalOpen,
         setIsExportModalOpen,
+        INCOME_CATEGORIES,
         // Handlers
         addTransaction,
         editTransaction,

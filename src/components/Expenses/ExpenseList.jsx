@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useBudget } from '../../context/BudgetContext';
+import { INCOME_CATEGORIES } from '../../types/defaultData';
 import CategoryIcon from '../CategoryIcon';
 import { 
   Search, 
@@ -12,7 +13,8 @@ import {
   Calendar,
   CreditCard,
   User,
-  Plus
+  Plus,
+  TrendingUp
 } from 'lucide-react';
 
 export const ExpenseList = () => {
@@ -22,6 +24,7 @@ export const ExpenseList = () => {
     deleteTransaction, 
     setEditingTransaction, 
     setIsAddModalOpen,
+    openAddModal,
     setIsExportModalOpen 
   } = useBudget();
   
@@ -32,6 +35,22 @@ export const ExpenseList = () => {
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterMember, setFilterMember] = useState('all');
   const [filterPayment, setFilterPayment] = useState('all');
+
+  const totalMonthIncome = useMemo(() => {
+    return monthTransactions
+      .filter(t => t.type === 'income')
+      .reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+  }, [monthTransactions]);
+
+  const totalMonthExpense = useMemo(() => {
+    return monthTransactions
+      .filter(t => t.type === 'expense')
+      .reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+  }, [monthTransactions]);
+
+  const incomeCount = useMemo(() => {
+    return monthTransactions.filter(t => t.type === 'income').length;
+  }, [monthTransactions]);
 
   // Filtered transactions
   const filteredTransactions = useMemo(() => {
@@ -68,7 +87,9 @@ export const ExpenseList = () => {
     
     const headers = ['Date', 'Type', 'Title', 'Category', 'Member', 'Payment Method', 'Amount', 'Notes'];
     const rows = filteredTransactions.map(t => {
-      const cat = data.categories.find(c => c.id === t.category)?.name || t.category;
+      const cat = t.type === 'income'
+        ? (t.category || 'Income')
+        : (data.categories.find(c => c.id === t.category)?.name || t.category);
       const mem = data.members.find(m => m.id === t.memberId)?.name || 'Self';
       return [
         `"${t.date}"`,
@@ -104,7 +125,7 @@ export const ExpenseList = () => {
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search expenses, groceries, repairs, bills..."
+              placeholder="Search expenses, salary, freelance, bills, groceries..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-slate-50 dark:bg-slate-800 text-sm text-slate-900 dark:text-white pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -112,7 +133,7 @@ export const ExpenseList = () => {
           </div>
 
           {/* Action CTAs */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={handleQuickCSV}
               className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold border border-slate-200 dark:border-slate-700 transition"
@@ -122,15 +143,24 @@ export const ExpenseList = () => {
               <span>CSV</span>
             </button>
 
+            {/* Dedicated Add Income CTA */}
             <button
-              onClick={() => {
-                setEditingTransaction(null);
-                setIsAddModalOpen(true);
-              }}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold shadow-sm transition"
+              onClick={() => openAddModal ? openAddModal('income') : setIsAddModalOpen(true)}
+              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-sm transition"
+              title="Add salary, freelance, or other income"
+            >
+              <TrendingUp className="w-4 h-4" />
+              <span>Add Income</span>
+            </button>
+
+            {/* Dedicated Add Expense CTA */}
+            <button
+              onClick={() => openAddModal ? openAddModal('expense') : setIsAddModalOpen(true)}
+              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-sm transition"
+              title="Add household expense"
             >
               <Plus className="w-4 h-4" />
-              <span>New Entry</span>
+              <span>Add Expense</span>
             </button>
           </div>
         </div>
@@ -142,21 +172,22 @@ export const ExpenseList = () => {
           <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-0.5 text-xs font-semibold">
             <button
               onClick={() => setFilterType('all')}
-              className={`px-2.5 py-1 rounded-md transition ${filterType === 'all' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs' : 'text-slate-500'}`}
+              className={`px-3 py-1.5 rounded-md transition ${filterType === 'all' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs font-bold' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}
             >
-              All
+              All ({monthTransactions.length})
             </button>
             <button
               onClick={() => setFilterType('expense')}
-              className={`px-2.5 py-1 rounded-md transition ${filterType === 'expense' ? 'bg-white dark:bg-slate-700 text-rose-600 dark:text-rose-400 shadow-xs' : 'text-slate-500'}`}
+              className={`px-3 py-1.5 rounded-md transition ${filterType === 'expense' ? 'bg-white dark:bg-slate-700 text-rose-600 dark:text-rose-400 shadow-xs font-bold' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}
             >
               Expenses
             </button>
             <button
               onClick={() => setFilterType('income')}
-              className={`px-2.5 py-1 rounded-md transition ${filterType === 'income' ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-xs' : 'text-slate-500'}`}
+              className={`px-3 py-1.5 rounded-md transition flex items-center gap-1.5 ${filterType === 'income' ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-xs font-bold' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}`}
             >
-              Incomes
+              <TrendingUp className="w-3.5 h-3.5" />
+              <span>Incomes ({incomeCount})</span>
             </button>
           </div>
 
@@ -167,9 +198,20 @@ export const ExpenseList = () => {
             className="bg-slate-100 dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 focus:outline-none cursor-pointer"
           >
             <option value="all">All Categories</option>
-            {data.categories.map(c => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
+            {filterType !== 'income' && (
+              <optgroup label="Expense Categories">
+                {data.categories.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </optgroup>
+            )}
+            {filterType !== 'expense' && (
+              <optgroup label="Income Categories">
+                {INCOME_CATEGORIES.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </optgroup>
+            )}
           </select>
 
           {/* Member Filter */}
@@ -205,25 +247,77 @@ export const ExpenseList = () => {
         </div>
       </div>
 
+      {/* Dedicated Income Overview Banner (When viewing Incomes) */}
+      {filterType === 'income' && (
+        <div className="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 border border-emerald-500/20 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fadeIn">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                <span>Total Monthly Inflow:</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-black">{currency}{totalMonthIncome.toLocaleString()}</span>
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {incomeCount} verified income source(s) logged for this billing cycle.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => openAddModal ? openAddModal('income') : setIsAddModalOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/25 transition transform active:scale-95 whitespace-nowrap"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add Another Income</span>
+          </button>
+        </div>
+      )}
+
       {/* Transaction Records List / Table */}
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
         {filteredTransactions.length === 0 ? (
-          <div className="py-16 text-center">
-            <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 mx-auto flex items-center justify-center mb-3">
-              <Search className="w-6 h-6" />
-            </div>
-            <h4 className="text-base font-bold text-slate-700 dark:text-slate-300">
-              No transactions match your criteria
-            </h4>
-            <p className="text-xs text-slate-400 mt-1">
-              Try adjusting your search terms or add a new transaction.
-            </p>
+          <div className="py-16 text-center px-4">
+            {filterType === 'income' ? (
+              <div>
+                <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center mb-3">
+                  <TrendingUp className="w-6 h-6" />
+                </div>
+                <h4 className="text-base font-bold text-slate-700 dark:text-slate-300">
+                  No income entries recorded yet for this month
+                </h4>
+                <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+                  Click below to log your salary, freelance earnings, investments, or gifts.
+                </p>
+                <button
+                  onClick={() => openAddModal ? openAddModal('income') : setIsAddModalOpen(true)}
+                  className="mt-4 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 transition transform active:scale-95"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Record First Income</span>
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 mx-auto flex items-center justify-center mb-3">
+                  <Search className="w-6 h-6" />
+                </div>
+                <h4 className="text-base font-bold text-slate-700 dark:text-slate-300">
+                  No transactions match your criteria
+                </h4>
+                <p className="text-xs text-slate-400 mt-1">
+                  Try adjusting your search terms or add a new entry.
+                </p>
+              </div>
+            )}
           </div>
         ) : (
           <div className="divide-y divide-slate-100 dark:divide-slate-800/80">
             {filteredTransactions.map((tx) => {
               const isIncome = tx.type === 'income';
               const cat = data.categories.find(c => c.id === tx.category) || {};
+              const incomeCat = isIncome ? (INCOME_CATEGORIES.find(c => c.id === tx.category) || { name: tx.category || 'Income', color: '#10b981', icon: 'TrendingUp' }) : null;
+              const categoryLabel = isIncome ? (incomeCat?.name || tx.category || 'Income') : (cat.name || tx.category || 'General');
               const member = data.members.find(m => m.id === tx.memberId) || data.members[0];
 
               return (
@@ -240,9 +334,9 @@ export const ExpenseList = () => {
                       }}
                     >
                       <CategoryIcon 
-                        name={isIncome ? 'TrendingUp' : (cat.icon || 'Receipt')} 
+                        name={isIncome ? (incomeCat?.icon || 'TrendingUp') : (cat.icon || 'Receipt')} 
                         className="w-5 h-5" 
-                        color={isIncome ? '#10b981' : (cat.color || '#6366f1')} 
+                        color={isIncome ? (incomeCat?.color || '#10b981') : (cat.color || '#6366f1')} 
                       />
                     </div>
 
@@ -251,8 +345,12 @@ export const ExpenseList = () => {
                         <h4 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white truncate">
                           {tx.title}
                         </h4>
-                        <span className="hidden sm:inline-flex text-[11px] font-medium px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                          {cat.name || 'General'}
+                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-md ${
+                          isIncome 
+                            ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/50' 
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                        }`}>
+                          {categoryLabel}
                         </span>
                       </div>
 
