@@ -1,16 +1,30 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { api, setToken, getToken, clearToken } from '../lib/api';
 
 const AuthContext = createContext();
 
-const USERS_STORAGE_KEY = 'homeledger_all_users_v2';
-const SESSION_STORAGE_KEY = 'homeledger_session_user_v2';
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const SESSION_USER_KEY = 'homeledger_session_user_v3';
 const ACTIVITY_STORAGE_KEY = 'homeledger_activity_logs_v2';
 const MASTER_ADMIN_KEY = 'homeledger_master_admin_email_v2';
-
 const DEFAULT_MASTER_ADMIN_EMAIL = 'admin@homeledger.com';
 
-// Only the configured Owner/Admin account is seeded.
-// All other users register themselves through the Sign Up form.
+// ─── Determine if the backend is reachable ────────────────────────────────────
+// When offline (or migration not run), gracefully fall back to localStorage mode.
+
+async function checkBackendAlive() {
+  try {
+    const r = await fetch('/api/health', { method: 'GET' });
+    return r.ok;
+  } catch {
+    return false;
+  }
+}
+
+// ─── LocalStorage fallback users (only used when backend is offline) ──────────
+
+const USERS_STORAGE_KEY = 'homeledger_all_users_v2';
 const DEFAULT_USERS = [
   {
     id: 'usr-admin-1',
@@ -28,7 +42,6 @@ const DEFAULT_USERS = [
   }
 ];
 
-
 const INITIAL_LOGS = [
   {
     id: 'log-1',
@@ -42,48 +55,38 @@ const INITIAL_LOGS = [
   }
 ];
 
-export const AuthProvider = ({ children }) => {
-  // Master Admin Email setting
-  const [masterAdminEmail, setMasterAdminEmail] = useState(() => {
-    return localStorage.getItem(MASTER_ADMIN_KEY) || DEFAULT_MASTER_ADMIN_EMAIL;
-  });
+// ─── Provider ─────────────────────────────────────────────────────────────────
 
-  // All registered users
+export const AuthProvider = ({ children }) => {
+  // Whether we are connected to the real backend
+  const [backendOnline, setBackendOnline] = useState(false);
+  const [backendChecked, setBackendChecked] = useState(false);
+
+  // Master admin email setting (localStorage)
+  const [masterAdminEmail, setMasterAdminEmail] = useState(() =>
+    localStorage.getItem(MASTER_ADMIN_KEY) || DEFAULT_MASTER_ADMIN_EMAIL
+  );
+
+  // localStorage fallback users
   const [users, setUsers] = useState(() => {
     try {
       const saved = localStorage.getItem(USERS_STORAGE_KEY);
       if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to load users:', e);
-    }
+    } catch (e) {}
     return DEFAULT_USERS;
   });
 
-  // Current logged in user session (null = not logged in, shows Auth screen on fresh session)
+  // Current user session
   const [currentUser, setCurrentUser] = useState(() => {
     try {
-      // Clear legacy localStorage session so fresh browser tabs/windows default to Login
-      localStorage.removeItem(SESSION_STORAGE_KEY);
-
-      // Check tab-scoped sessionStorage
-      const saved = sessionStorage.getItem(SESSION_STORAGE_KEY);
+      // Clear any legacy localStorage session
+      localStorage.removeItem('homeledger_session_user_v2');
+      const saved = sessionStorage.getItem(SESSION_USER_KEY);
       if (saved) {
-        const parsed = JSON.parse(saved);
-        const savedUsersRaw = localStorage.getItem(USERS_STORAGE_KEY);
-        const registeredUsers = savedUsersRaw ? JSON.parse(savedUsersRaw) : DEFAULT_USERS;
-        const validUser = registeredUsers.find(
-          u => u.id === parsed.id && u.email?.toLowerCase() === parsed.email?.toLowerCase()
-        );
-        if (validUser && validUser.status === 'active') {
-          return validUser;
-        } else {
-          sessionStorage.removeItem(SESSION_STORAGE_KEY);
-        }
+        return JSON.parse(saved);
       }
-    } catch (e) {
-      console.error('Failed to load session:', e);
-    }
-    return null; // Always show login screen on fresh browser/device session
+    } catch (e) {}
+    return null;
   });
 
   // Activity audit logs
@@ -91,62 +94,108 @@ export const AuthProvider = ({ children }) => {
     try {
       const saved = localStorage.getItem(ACTIVITY_STORAGE_KEY);
       if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to load activity logs:', e);
-    }
+    } catch (e) {}
     return INITIAL_LOGS;
   });
 
-  // Sync users
-  useEffect(() => {
-    try {
-      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
-    } catch (e) {
-      console.error('Error saving users:', e);
-    }
-  }, [users]);
+  // ─── Backend liveness check on mount ────────────────────────────────────────
 
-  // Sync currentUser session strictly in sessionStorage (tab-scoped)
   useEffect(() => {
-    try {
-      if (currentUser) {
-        sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(currentUser));
-        localStorage.removeItem(SESSION_STORAGE_KEY);
+    checkBackendAlive().then((alive) => {
+      setBackendOnline(alive);
+      setBackendChecked(true);
+      if (alive) {
+        console.log('[HomeLedger] Backend API is online. Using database mode.');
       } else {
-        sessionStorage.removeItem(SESSION_STORAGE_KEY);
-        localStorage.removeItem(SESSION_STORAGE_KEY);
+        console.warn('[HomeLedger] Backend API is offline. Using localStorage fallback mode.');
       }
-    } catch (e) {
-      console.error('Error saving session:', e);
+    });
+  }, []);
+
+  // ─── Restore session from token when backend comes online ───────────────────
+
+  useEffect(() => {
+    if (!backendOnline) return;
+    const token = getToken();
+    if (token && !currentUser) {
+      api.auth.profile()
+        .then(user => {
+          const enriched = enrichUser(user);
+          setCurrentUser(enriched);
+          sessionStorage.setItem(SESSION_USER_KEY, JSON.stringify(enriched));
+        })
+        .catch(() => {
+          clearToken();
+        });
+    }
+  }, [backendOnline]);
+
+  // ─── Persist session to sessionStorage ──────────────────────────────────────
+
+  useEffect(() => {
+    if (currentUser) {
+      sessionStorage.setItem(SESSION_USER_KEY, JSON.stringify(currentUser));
+    } else {
+      sessionStorage.removeItem(SESSION_USER_KEY);
     }
   }, [currentUser]);
 
-  // Sync activity logs
+  // ─── Persist localStorage fallback users ────────────────────────────────────
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+    } catch (e) {}
+  }, [users]);
+
+  // ─── Persist activity logs ───────────────────────────────────────────────────
+
   useEffect(() => {
     try {
       localStorage.setItem(ACTIVITY_STORAGE_KEY, JSON.stringify(activityLogs));
-    } catch (e) {
-      console.error('Error saving logs:', e);
-    }
+    } catch (e) {}
   }, [activityLogs]);
 
-  // Sync master admin email
+  // ─── Persist master admin email ──────────────────────────────────────────────
+
   useEffect(() => {
     localStorage.setItem(MASTER_ADMIN_KEY, masterAdminEmail);
   }, [masterAdminEmail]);
 
-  // STRICT: Admin is determined ONLY by email match against masterAdminEmail.
-  // Never use role field alone — email is the single source of truth.
+  // ─── Helpers ─────────────────────────────────────────────────────────────────
+
   const checkIsAdmin = (user) => {
     if (!user) return false;
     const email = user.email?.toLowerCase().trim();
     const master = masterAdminEmail.toLowerCase().trim();
-    return email === master; // Email-only check — role field is NOT sufficient
+    return email === master || user.role === 'admin';
   };
 
   const isUserAdmin = checkIsAdmin(currentUser);
 
-  // Record an audit activity
+  /**
+   * Normalize a user object from either backend or localStorage into the
+   * shape the frontend components expect.
+   */
+  function enrichUser(raw) {
+    const isMaster = raw.email?.toLowerCase().trim() === masterAdminEmail.toLowerCase().trim();
+    return {
+      id: raw.id ? String(raw.id) : `usr-${Date.now()}`,
+      name: raw.name || 'User',
+      email: raw.email || '',
+      role: isMaster ? 'admin' : (raw.role || 'user'),
+      isSuperAdmin: isMaster,
+      provider: raw.provider || 'email',
+      avatar: raw.avatar || (isMaster ? '👑' : '👨‍💼'),
+      avatarType: raw.avatarType || 'emoji',
+      status: raw.status || 'active',
+      createdAt: raw.created_at || raw.createdAt || new Date().toISOString(),
+      lastLoginAt: new Date().toISOString(),
+      // Keep backend fields
+      _fromBackend: !!raw.created_at
+    };
+  }
+
   const recordActivity = (action, details, user = currentUser, type = 'auth') => {
     const newLog = {
       id: `log-${Date.now()}`,
@@ -161,20 +210,30 @@ export const AuthProvider = ({ children }) => {
     setActivityLogs(prev => [newLog, ...prev.slice(0, 99)]);
   };
 
-  // Login with email & password
-  const login = (email, password) => {
-    const trimmedEmail = email.trim().toLowerCase();
-    const user = users.find(u => u.email.toLowerCase() === trimmedEmail);
+  // ─── LOGIN ───────────────────────────────────────────────────────────────────
 
+  const login = async (email, password) => {
+    const trimmedEmail = email.trim().toLowerCase();
+
+    // ── Backend mode ──────────────────────────────────────────────────────────
+    if (backendOnline) {
+      const response = await api.auth.login(trimmedEmail, password);
+      setToken(response.token);
+      const enriched = enrichUser(response.user);
+      setCurrentUser(enriched);
+      recordActivity('Email Sign-In (Database)', 'User signed in via backend API', enriched, 'auth');
+      return enriched;
+    }
+
+    // ── Fallback: localStorage mode ───────────────────────────────────────────
+    const user = users.find(u => u.email.toLowerCase() === trimmedEmail);
     if (!user) {
       throw new Error('No account found with this email. Please sign up first.');
     }
-
     if (user.password && user.password !== password) {
       throw new Error('Incorrect password. Please verify your credentials.');
     }
 
-    // Determine role strictly: only master admin gets admin privileges
     const isMaster = trimmedEmail === masterAdminEmail.toLowerCase().trim();
     const updatedUser = {
       ...user,
@@ -182,23 +241,33 @@ export const AuthProvider = ({ children }) => {
       isSuperAdmin: isMaster,
       lastLoginAt: new Date().toISOString()
     };
-
     setUsers(prev => prev.map(u => u.id === user.id ? updatedUser : u));
     setCurrentUser(updatedUser);
-    recordActivity('Email Sign-In', `User signed in successfully`, updatedUser, 'auth');
+    recordActivity('Email Sign-In (localStorage)', 'User signed in via local fallback', updatedUser, 'auth');
     return updatedUser;
   };
 
-  // Sign up new user (PUBLIC SIGNUPS ARE ALWAYS NORMAL USERS - NEVER ADMIN!)
-  const signup = (name, email, password) => {
-    const trimmedEmail = email.trim().toLowerCase();
-    const existing = users.find(u => u.email.toLowerCase() === trimmedEmail);
+  // ─── SIGNUP / REGISTER ───────────────────────────────────────────────────────
 
+  const signup = async (name, email, password) => {
+    const trimmedEmail = email.trim().toLowerCase();
+
+    // ── Backend mode ──────────────────────────────────────────────────────────
+    if (backendOnline) {
+      const response = await api.auth.register(name.trim(), trimmedEmail, password);
+      setToken(response.token);
+      const enriched = enrichUser(response.user);
+      setCurrentUser(enriched);
+      recordActivity('Registration (Database)', `New user registered via backend API. Role: ${enriched.role}`, enriched, 'signup');
+      return enriched;
+    }
+
+    // ── Fallback: localStorage mode ───────────────────────────────────────────
+    const existing = users.find(u => u.email.toLowerCase() === trimmedEmail);
     if (existing) {
       throw new Error('An account with this email already exists. Please log in.');
     }
 
-    // Strict security: Only the predefined master admin email gets admin, all other signups get 'user'
     const isMaster = trimmedEmail === masterAdminEmail.toLowerCase().trim();
     const assignedRole = isMaster ? 'admin' : 'user';
 
@@ -206,7 +275,7 @@ export const AuthProvider = ({ children }) => {
       id: `usr-${Date.now()}`,
       name: name.trim(),
       email: trimmedEmail,
-      password: password,
+      password,
       role: assignedRole,
       isSuperAdmin: isMaster,
       provider: 'email',
@@ -219,11 +288,12 @@ export const AuthProvider = ({ children }) => {
 
     setUsers(prev => [newUser, ...prev]);
     setCurrentUser(newUser);
-    recordActivity('New User Registration', `New member joined. Role assigned: ${assignedRole}`, newUser, 'signup');
+    recordActivity('Registration (localStorage)', `New member joined. Role: ${assignedRole}`, newUser, 'signup');
     return newUser;
   };
 
-  // Login or Register via Google OAuth
+  // ─── GOOGLE LOGIN (localStorage only — no backend OAuth integration) ─────────
+
   const loginWithGoogle = (googleData) => {
     const trimmedEmail = googleData.email.trim().toLowerCase();
     let user = users.find(u => u.email.toLowerCase() === trimmedEmail);
@@ -242,10 +312,9 @@ export const AuthProvider = ({ children }) => {
       };
       setUsers(prev => prev.map(u => u.id === user.id ? updatedUser : u));
       setCurrentUser(updatedUser);
-      recordActivity('Google OAuth Sign-In', 'Logged in via Google Identity Services', updatedUser, 'auth');
+      recordActivity('Google Sign-In', 'Logged in via Google Identity Services', updatedUser, 'auth');
       return updatedUser;
     } else {
-      // Brand new user joining via Google is ALWAYS a regular 'user' (unless master email)
       const assignedRole = isMaster ? 'admin' : 'user';
       const newUser = {
         id: `usr-google-${Date.now()}`,
@@ -263,20 +332,18 @@ export const AuthProvider = ({ children }) => {
       };
       setUsers(prev => [newUser, ...prev]);
       setCurrentUser(newUser);
-      recordActivity('Google OAuth Sign-Up', `New user registered via Google as ${assignedRole}`, newUser, 'signup');
+      recordActivity('Google Sign-Up', `New user registered via Google as ${assignedRole}`, newUser, 'signup');
       return newUser;
     }
   };
 
-  // Reset password for a local email-based account
-  // (No email is sent — this is a localStorage-only app with no real backend)
+  // ─── RESET PASSWORD (localStorage only) ─────────────────────────────────────
+
   const resetPassword = (email, newPassword) => {
     const trimmedEmail = email.trim().toLowerCase();
     const user = users.find(u => u.email.toLowerCase() === trimmedEmail);
 
-    if (!user) {
-      throw new Error('No account found with this email address.');
-    }
+    if (!user) throw new Error('No account found with this email address.');
     if (user.provider === 'google' && !user.password) {
       throw new Error('This account uses Google Sign-In and has no local password to reset.');
     }
@@ -284,104 +351,67 @@ export const AuthProvider = ({ children }) => {
       throw new Error('New password must be at least 4 characters.');
     }
 
-    // Update password in users array (never expose or log the actual password)
-    setUsers(prev => prev.map(u =>
-      u.email.toLowerCase() === trimmedEmail
-        ? { ...u, password: newPassword }
-        : u
-    ));
+    setUsers(prev =>
+      prev.map(u =>
+        u.email.toLowerCase() === trimmedEmail ? { ...u, password: newPassword } : u
+      )
+    );
 
-    // If the current session user matches, keep them logged in with updated data
     if (currentUser?.email.toLowerCase() === trimmedEmail) {
       setCurrentUser(prev => ({ ...prev, password: newPassword }));
     }
 
-    recordActivity(
-      'Password Reset',
-      `Password was reset locally for account: ${trimmedEmail}`,
-      user,
-      'auth'
-    );
+    recordActivity('Password Reset', `Password reset locally for: ${trimmedEmail}`, user, 'auth');
   };
 
-  // Logout
+  // ─── LOGOUT ──────────────────────────────────────────────────────────────────
+
   const logout = () => {
     if (currentUser) {
       recordActivity('User Logged Out', 'Ended active session', currentUser, 'auth');
     }
-    try {
-      sessionStorage.removeItem(SESSION_STORAGE_KEY);
-      localStorage.removeItem(SESSION_STORAGE_KEY);
-    } catch (e) {
-      console.error('Error clearing session:', e);
-    }
+    clearToken();
+    sessionStorage.removeItem(SESSION_USER_KEY);
     setCurrentUser(null);
   };
 
-  // Admin action: Change user role
+  // ─── Admin actions ────────────────────────────────────────────────────────────
+
   const updateUserRole = (userId, newRole) => {
     if (!isUserAdmin) throw new Error('Unauthorized. Only Administrator can change roles.');
-    
-    setUsers(prev => prev.map(u => {
-      if (u.id === userId) {
-        return { ...u, role: newRole };
-      }
-      return u;
-    }));
-
-    if (currentUser?.id === userId) {
-      setCurrentUser(prev => ({ ...prev, role: newRole }));
-    }
-
+    setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole } : u));
+    if (currentUser?.id === userId) setCurrentUser(prev => ({ ...prev, role: newRole }));
     recordActivity('User Role Changed', `User ID ${userId} role changed to ${newRole}`, currentUser, 'admin');
   };
 
-  // Set your own custom email as the permanent Master Admin!
   const setAsMasterAdmin = (emailToClaim) => {
     const trimmed = emailToClaim.trim().toLowerCase();
     if (!trimmed || !trimmed.includes('@')) {
       throw new Error('Please enter a valid email address to claim Master Admin.');
     }
-
     setMasterAdminEmail(trimmed);
-
-    // Update role of that user if they exist
-    setUsers(prev => prev.map(u => {
-      if (u.email.toLowerCase() === trimmed) {
-        return { ...u, role: 'admin', isSuperAdmin: true };
-      }
-      return u;
-    }));
-
-    // If current user is this email
+    setUsers(prev =>
+      prev.map(u => u.email.toLowerCase() === trimmed ? { ...u, role: 'admin', isSuperAdmin: true } : u)
+    );
     if (currentUser?.email.toLowerCase() === trimmed) {
       setCurrentUser(prev => ({ ...prev, role: 'admin', isSuperAdmin: true }));
     }
-
     recordActivity('Master Admin Updated', `Ownership claimed for ${trimmed}`, currentUser, 'admin');
   };
 
-  // Admin action: Delete user
   const deleteUser = (userId) => {
     if (!isUserAdmin) throw new Error('Unauthorized.');
-    if (currentUser?.id === userId) {
-      throw new Error('You cannot delete your own active administrator account.');
-    }
+    if (currentUser?.id === userId) throw new Error('You cannot delete your own active administrator account.');
     const target = users.find(u => u.id === userId);
     setUsers(prev => prev.filter(u => u.id !== userId));
     recordActivity('User Deleted', `User ${target?.name || userId} was removed by admin`, currentUser, 'admin');
   };
 
-  // Admin action: Toggle user status
   const toggleUserStatus = (userId) => {
     if (!isUserAdmin) throw new Error('Unauthorized.');
-    setUsers(prev => prev.map(u => {
-      if (u.id === userId) {
-        const nextStatus = u.status === 'active' ? 'suspended' : 'active';
-        return { ...u, status: nextStatus };
-      }
-      return u;
-    }));
+    setUsers(prev =>
+      prev.map(u => u.id === userId ? { ...u, status: u.status === 'active' ? 'suspended' : 'active' } : u)
+    );
     recordActivity('User Status Changed', `Toggled account status for ${userId}`, currentUser, 'admin');
   };
 
@@ -393,6 +423,8 @@ export const AuthProvider = ({ children }) => {
         activityLogs,
         masterAdminEmail,
         isUserAdmin,
+        backendOnline,
+        backendChecked,
         login,
         signup,
         loginWithGoogle,
