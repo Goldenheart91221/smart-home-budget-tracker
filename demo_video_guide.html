@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HomeLedger Pro – Demo Video Script & Recording Guide</title>
+<style>
+  :root {
+    --indigo: #4f46e5;
+    --emerald: #10b981;
+    --amber: #f59e0b;
+    --rose: #f43f5e;
+    --slate-900: #0f172a;
+    --slate-800: #1e293b;
+    --slate-700: #334155;
+    --slate-600: #475569;
+    --slate-400: #94a3b8;
+    --slate-100: #f1f5f9;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--slate-900);
+    color: var(--white);
+    line-height: 1.6;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #0f172a 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 60px 24px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(79,70,229,0.15) 0%, transparent 60%),
+                radial-gradient(circle at 70% 50%, rgba(16,185,129,0.1) 0%, transparent 60%);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(79,70,229,0.15); border: 1px solid rgba(79,70,229,0.4);
+    color: #a5b4fc; font-size: 13px; font-weight: 600;
+    padding: 6px 16px; border-radius: 999px;
+    margin-bottom: 24px; position: relative; z-index: 1;
+    letter-spacing: 0.5px;
+  }
+  .hero-title {
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 900; letter-spacing: -2px;
+    background: linear-gradient(135deg, #fff 30%, #a5b4fc 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; position: relative; z-index: 1;
+    margin-bottom: 12px;
+  }
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 22px);
+    color: #94a3b8; position: relative; z-index: 1; margin-bottom: 48px;
+    font-weight: 400;
+  }
+  .hero-tags {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: center; position: relative; z-index: 1; margin-bottom: 48px;
+  }
+  .tag {
+    padding: 8px 20px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    border: 1px solid;
+  }
+  .tag-blue  { background: rgba(79,70,229,0.15); border-color: rgba(79,70,229,0.4); color: #a5b4fc; }
+  .tag-green { background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.35); color: #6ee7b7; }
+  .tag-amber { background: rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.35); color: #fcd34d; }
+
+  /* ── SECTION ── */
+  .section {
+    max-width: 1100px; margin: 0 auto; padding: 80px 24px;
+  }
+  .section-title {
+    font-size: 32px; font-weight: 800; margin-bottom: 8px;
+    background: linear-gradient(135deg, #fff 50%, #818cf8);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .section-sub { color: #94a3b8; font-size: 15px; margin-bottom: 48px; }
+
+  /* ── FEATURE VERIFY ── */
+  .feature-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px; margin-bottom: 60px;
+  }
+  .feature-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 24px;
+    transition: border-color 0.2s;
+  }
+  .feature-card:hover { border-color: rgba(79,70,229,0.4); }
+  .feature-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .feature-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+  }
+  .icon-blue { background: rgba(79,70,229,0.2); }
+  .icon-green { background: rgba(16,185,129,0.2); }
+  .icon-amber { background: rgba(245,158,11,0.2); }
+  .icon-rose { background: rgba(244,63,94,0.2); }
+  .icon-purple { background: rgba(139,92,246,0.2); }
+  .feature-name { font-weight: 700; font-size: 15px; }
+  .feature-desc { font-size: 13px; color: #94a3b8; margin-bottom: 12px; }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700;
+  }
+  .pill-green { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+  .pill-amber { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+
+  /* ── SCENE CARDS ── */
+  .scene-list { display: flex; flex-direction: column; gap: 32px; }
+  .scene-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px; overflow: hidden;
+  }
+  .scene-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 20px 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .scene-number {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 900; flex-shrink: 0;
+  }
+  .scene-title { font-size: 18px; font-weight: 800; }
+  .scene-time {
+    margin-left: auto; background: rgba(79,70,229,0.15);
+    border: 1px solid rgba(79,70,229,0.3); color: #a5b4fc;
+    padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
+    white-space: nowrap;
+  }
+  .scene-body { padding: 24px 28px; }
+  .scene-steps { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .scene-steps li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 14px; color: #cbd5e1;
+  }
+  .step-num {
+    min-width: 24px; height: 24px; border-radius: 6px;
+    background: rgba(79,70,229,0.2); border: 1px solid rgba(79,70,229,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; color: #a5b4fc; flex-shrink: 0;
+  }
+  .scene-narration {
+    margin-top: 16px; padding: 14px 18px;
+    background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);
+    border-radius: 10px; font-size: 13px; color: #6ee7b7; font-style: italic;
+  }
+  .scene-narration strong { font-style: normal; color: #a7f3d0; }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    display: flex; overflow-x: auto; gap: 0;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; overflow: hidden;
+  }
+  .timeline-item {
+    flex: 1; min-width: 100px; padding: 16px 12px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    text-align: center;
+  }
+  .timeline-item:last-child { border-right: none; }
+  .timeline-label { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+  .timeline-name { font-size: 12px; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
+  .timeline-dur {
+    font-size: 11px; font-weight: 800;
+    background: rgba(79,70,229,0.2); color: #a5b4fc;
+    padding: 2px 8px; border-radius: 999px; display: inline-block;
+  }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: #0f172a; border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 20px 24px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 13px; line-height: 1.8; overflow-x: auto;
+    margin-bottom: 20px;
+  }
+  .code-comment { color: #64748b; }
+  .code-cmd { color: #6ee7b7; }
+  .code-str { color: #fcd34d; }
+  .code-url { color: #60a5fa; }
+
+  /* ── TIPS ── */
+  .tip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .tip-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 20px;
+  }
+  .tip-icon { font-size: 24px; margin-bottom: 10px; }
+  .tip-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .tip-desc { font-size: 13px; color: #94a3b8; }
+
+  /* ── TOOLS ── */
+  .tool-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
+  .tool-table th, .tool-table td {
+    padding: 12px 16px; text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px;
+  }
+  .tool-table th { color: #94a3b8; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .tool-table td { color: #e2e8f0; }
+  .tool-free { color: #6ee7b7; font-size: 12px; font-weight: 700; }
+
+  /* ── ALERT ── */
+  .alert {
+    padding: 16px 20px; border-radius: 12px; font-size: 14px;
+    margin-bottom: 24px; display: flex; gap: 12px; align-items: flex-start;
+  }
+  .alert-info { background: rgba(79,70,229,0.1); border: 1px solid rgba(79,70,229,0.3); color: #a5b4fc; }
+  .alert-warn { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: #fcd34d; }
+  .alert-success { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 48px 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: #475569; font-size: 14px;
+  }
+  footer strong { color: #94a3b8; }
+
+  hr.section-divider {
+    border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    .scene-header { flex-wrap: wrap; }
+    .scene-time { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="hero">
+  <div class="hero-badge">🎬 Professional Demo Video Guide</div>
+  <h1 class="hero-title">HomeLedger Pro</h1>
+  <p class="hero-sub">Smart Home Budget &amp; Expense Tracker — College Project Demo Video</p>
+  <div class="hero-tags">
+    <span class="tag tag-blue">⚛️ React + Vite</span>
+    <span class="tag tag-green">🗄️ PostgreSQL (Neon)</span>
+    <span class="tag tag-blue">🔐 JWT Auth</span>
+    <span class="tag tag-amber">📊 Chart.js</span>
+    <span class="tag tag-green">🌐 Node.js + Express</span>
+    <span class="tag tag-blue">🎨 TailwindCSS</span>
+  </div>
+  <p style="color:#475569;font-size:13px;position:relative;z-index:1;">
+    B.Tech CSE Project · Sandip University · 2026
+  </p>
+</section>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════ VERIFIED FEATURES ══════════════════ -->
+<div class="section">
+  <h2 class="section-title">✅ Verified Working Features</h2>
+  <p class="section-sub">Only features confirmed in actual source code are listed here.</p>
+
+  <div class="feature-grid">
+
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feature-icon icon-blue">🔐</div>
+        <div class="feature-name">Authentication</div>
+      </div>
+      <p class="feature-desc">Email/password register &amp; login, session-scoped JWT tokens, Forgot Password (3-step local reset), Google OAuth modal, Admin portal (email-gated)</p>
+      <span class="status-pill pill-green">✅ WORKING</span>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feature-icon icon-green">📊</div>
+        <div class="feature-name">Dashboard</div>
+      </div>
+      <p class="feature-desc">Total Income, Total Expenses, Remaining Balance, Savings Rate, Health Score, Charts (bar, doughnut, line), AI Smart Advisor insights</p>
+      <span class="status-pill pill-green">✅ WORKING</span>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feature-icon icon-amber">💸</div>
+        <div class="feature-name">Expense Management</div>
+      </div>
+      <p class="feature-desc">Add, edit, delete transactions. 12+ categories. Search &amp; filter by month. Income tracking. Confetti on income entry.</p>
+      <span class="status-pill pill-green">✅ WORKING</span>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feature-icon icon-purple">📋</div>
+        <div class="feature-name">Budget Management</div>
+      </div>
+      <p class="feature-desc">Per-category monthly budget limits. Visual progress bars. Over-budget alerts. Category-wise spend tracking.</p>
+      <span class="status-pill pill-green">✅ WORKING</span>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feature-icon icon-rose">🧾</div>
+        <div class="feature-name">Bills Management</div>
+      </div>
+      <p class="feature-desc">Add bills with due dates, biller info, categories. Mark as Paid (auto-creates expense). Overdue detection. Pending/Paid filters.</p>
+      <span class="status-pill pill-green">✅ WORKING</span>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feature-icon icon-green">👨‍👩‍👧</div>
+        <div class="feature-name">Family Split View</div>
+      </div>
+      <p class="feature-desc">Multi-member household expense tracking. Per-member spend breakdown and contribution analysis.</p>
+      <span class="status-pill pill-green">✅ WORKING</span>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feature-icon icon-blue">🤖</div>
+        <div class="feature-name">AI Smart Advisor</div>
+      </div>
+      <p class="feature-desc">Rule-based AI insights: budget overrun alerts, over-budget categories, bill warnings, savings tips. Dynamic and data-driven.</p>
+      <span class="status-pill pill-green">✅ WORKING (Rule-Based AI)</span>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feature-icon icon-amber">🗄️</div>
+        <div class="feature-name">Backend + Database</div>
+      </div>
+      <p class="feature-desc">Node.js/Express API (26 endpoints), Neon PostgreSQL (6 tables), bcryptjs password hashing, JWT auth. Graceful offline fallback.</p>
+      <span class="status-pill pill-amber">⚡ BACKEND READY (run migration)</span>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feature-icon icon-purple">👑</div>
+        <div class="feature-name">Admin Portal</div>
+      </div>
+      <p class="feature-desc">Master admin login, user management (activate/suspend), activity audit logs, role management.</p>
+      <span class="status-pill pill-green">✅ WORKING</span>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-card-header">
+        <div class="feature-icon icon-green">📤</div>
+        <div class="feature-name">Export</div>
+      </div>
+      <p class="feature-desc">Export financial data as JSON backup. Dark/Light mode toggle. Month selector.</p>
+      <span class="status-pill pill-green">✅ WORKING</span>
+    </div>
+
+  </div>
+
+  <!-- TIMELINE -->
+  <h3 style="font-size:18px;font-weight:700;margin-bottom:16px;color:#e2e8f0;">🎬 Video Timeline (2 min 45 sec total)</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-label">Scene 1</div>
+      <div class="timeline-name">Intro</div>
+      <div class="timeline-dur">0:20</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-label">Scene 2</div>
+      <div class="timeline-name">Auth</div>
+      <div class="timeline-dur">0:25</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-label">Scene 3</div>
+      <div class="timeline-name">Dashboard</div>
+      <div class="timeline-dur">0:25</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-label">Scene 4</div>
+      <div class="timeline-name">Expenses</div>
+      <div class="timeline-dur">0:25</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-label">Scene 5</div>
+      <div class="timeline-name">Budget</div>
+      <div class="timeline-dur">0:15</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-label">Scene 6</div>
+      <div class="timeline-name">Bills</div>
+      <div class="timeline-dur">0:15</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-label">Scene 7</div>
+      <div class="timeline-name">AI + Backend</div>
+      <div class="timeline-dur">0:15</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-label">Scene 8</div>
+      <div class="timeline-name">Closing</div>
+      <div class="timeline-dur">0:05</div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════ SCENE BY SCENE ══════════════════ -->
+<div class="section">
+  <h2 class="section-title">🎬 Scene-by-Scene Recording Plan</h2>
+  <p class="section-sub">Follow these steps exactly when screen-recording your application.</p>
+
+  <div class="scene-list">
+
+    <!-- SCENE 1 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <div class="scene-number">1</div>
+        <div>
+          <div class="scene-title">Project Introduction</div>
+          <div style="font-size:13px;color:#64748b;">Title card + branding</div>
+        </div>
+        <div class="scene-time">⏱ 0:00 – 0:20</div>
+      </div>
+      <div class="scene-body">
+        <ul class="scene-steps">
+          <li><div class="step-num">1</div> Open a black/dark screen in your video editor or use the application loading state</li>
+          <li><div class="step-num">2</div> Show title text: <strong style="color:#a5b4fc;">HomeLedger Pro</strong></li>
+          <li><div class="step-num">3</div> Fade in subtitle: <em style="color:#94a3b8;">Smart Home Budget &amp; Expense Tracker</em></li>
+          <li><div class="step-num">4</div> Show tech stack tags: React · Node.js · PostgreSQL · JWT · TailwindCSS</li>
+          <li><div class="step-num">5</div> Transition to the actual login page</li>
+        </ul>
+        <div class="scene-narration">
+          <strong>🎙️ Narration:</strong> "HomeLedger Pro is a full-stack smart home budget and expense management system built using React, Node.js, Express, and Neon PostgreSQL. Let me show you how it works."
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 2 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <div class="scene-number">2</div>
+        <div>
+          <div class="scene-title">Authentication — Login &amp; Registration</div>
+          <div style="font-size:13px;color:#64748b;">Show real auth flow</div>
+        </div>
+        <div class="scene-time">⏱ 0:20 – 0:45</div>
+      </div>
+      <div class="scene-body">
+        <ul class="scene-steps">
+          <li><div class="step-num">1</div> Navigate to <code style="color:#a5b4fc;">http://localhost:3000</code> — the login screen appears automatically</li>
+          <li><div class="step-num">2</div> Click <strong>"New here? Create account"</strong> — show the registration form</li>
+          <li><div class="step-num">3</div> Fill in: Name = <em>"Rahul Sharma"</em>, Email = <em>"rahul@demo.com"</em>, Password = <em>"Demo1234!"</em></li>
+          <li><div class="step-num">4</div> Click <strong>Create Account</strong> — dashboard loads with confetti animation</li>
+          <li><div class="step-num">5</div> Log out, then log back in with the same email/password to demonstrate login</li>
+          <li><div class="step-num">6</div> Briefly show <strong>Forgot Password</strong> modal flow</li>
+        </ul>
+        <div class="scene-narration">
+          <strong>🎙️ Narration:</strong> "The system uses JWT-based authentication with bcryptjs password hashing. Each user gets a private, isolated financial ledger. Registration and login are connected to our Neon PostgreSQL database."
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 3 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <div class="scene-number">3</div>
+        <div>
+          <div class="scene-title">Dashboard — Financial Overview</div>
+          <div style="font-size:13px;color:#64748b;">KPI cards, charts, Smart Advisor</div>
+        </div>
+        <div class="scene-time">⏱ 0:45 – 1:10</div>
+      </div>
+      <div class="scene-body">
+        <ul class="scene-steps">
+          <li><div class="step-num">1</div> Click <strong>Add Income</strong> → Enter: Source = "Monthly Salary", Amount = ₹50,000, Category = Salary, Date = today</li>
+          <li><div class="step-num">2</div> Watch confetti animation + dashboard updates instantly</li>
+          <li><div class="step-num">3</div> Point to <strong>Total Income: ₹50,000</strong> metric card</li>
+          <li><div class="step-num">4</div> Add a quick expense: "Groceries" → ₹3,500 → see Remaining Balance update</li>
+          <li><div class="step-num">5</div> Scroll to show <strong>Analytics Charts</strong> (bar, doughnut, line)</li>
+          <li><div class="step-num">6</div> Show <strong>Smart Advisor</strong> AI insights panel</li>
+          <li><div class="step-num">7</div> Show <strong>Financial Health Score</strong> and Budget Limits section</li>
+          <li><div class="step-num">8</div> Toggle Dark/Light mode using the navbar button</li>
+        </ul>
+        <div class="scene-narration">
+          <strong>🎙️ Narration:</strong> "The dashboard shows real-time financial metrics including total income, expenses, remaining balance, and a financial health score. Charts update dynamically. The AI Smart Advisor gives personalized budget recommendations."
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 4 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <div class="scene-number">4</div>
+        <div>
+          <div class="scene-title">Expense Management</div>
+          <div style="font-size:13px;color:#64748b;">Add, edit, delete, search, filter</div>
+        </div>
+        <div class="scene-time">⏱ 1:10 – 1:35</div>
+      </div>
+      <div class="scene-body">
+        <ul class="scene-steps">
+          <li><div class="step-num">1</div> Click <strong>Expenses &amp; Income</strong> tab from navbar</li>
+          <li><div class="step-num">2</div> Click <strong>Add Expense</strong> → fill: Title = "Electricity Bill", Amount = ₹2,200, Category = "Electricity &amp; Power"</li>
+          <li><div class="step-num">3</div> Save — expense appears in the list</li>
+          <li><div class="step-num">4</div> Show the expense list with dates, amounts, categories</li>
+          <li><div class="step-num">5</div> Click edit (pencil icon) on a transaction → modify amount → Save</li>
+          <li><div class="step-num">6</div> Use the <strong>Search bar</strong> to search "grocery" — show filtered results</li>
+          <li><div class="step-num">7</div> Use the <strong>Month selector</strong> to switch months</li>
+          <li><div class="step-num">8</div> Delete a transaction using the trash icon</li>
+          <li><div class="step-num">9</div> Click <strong>Add Income</strong> → show income categories: Salary, Freelance, Business, Investment, Gift</li>
+        </ul>
+        <div class="scene-narration">
+          <strong>🎙️ Narration:</strong> "The expense and income management module supports 12+ categories. All records are stored in PostgreSQL and can be filtered by month, edited, or deleted. Income is tracked separately with dedicated categories."
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 5 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <div class="scene-number">5</div>
+        <div>
+          <div class="scene-title">Budget Management</div>
+          <div style="font-size:13px;color:#64748b;">Monthly budget limits &amp; tracking</div>
+        </div>
+        <div class="scene-time">⏱ 1:35 – 1:50</div>
+      </div>
+      <div class="scene-body">
+        <ul class="scene-steps">
+          <li><div class="step-num">1</div> Click <strong>Budget</strong> tab from navbar</li>
+          <li><div class="step-num">2</div> Show the category budget cards with progress bars</li>
+          <li><div class="step-num">3</div> Click edit on <em>Groceries &amp; Kitchen</em> → change budget to ₹12,000</li>
+          <li><div class="step-num">4</div> Save — progress bar updates (green/amber/red based on % used)</li>
+          <li><div class="step-num">5</div> Show an <em>over-budget</em> category turning red</li>
+          <li><div class="step-num">6</div> Point out the <strong>Total Budget vs Total Spent</strong> comparison</li>
+        </ul>
+        <div class="scene-narration">
+          <strong>🎙️ Narration:</strong> "Budget management lets you set monthly spending limits for each category. Visual progress bars show how much of your budget is used. Categories turn red when over-budget, triggering Smart Advisor alerts."
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 6 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <div class="scene-number">6</div>
+        <div>
+          <div class="scene-title">Bills Management</div>
+          <div style="font-size:13px;color:#64748b;">Due dates, payment status, overdue alerts</div>
+        </div>
+        <div class="scene-time">⏱ 1:50 – 2:05</div>
+      </div>
+      <div class="scene-body">
+        <ul class="scene-steps">
+          <li><div class="step-num">1</div> Click <strong>Bills</strong> tab from navbar</li>
+          <li><div class="step-num">2</div> Click <strong>Add Bill</strong> → fill: Title = "Electricity Board", Amount = ₹1,800, Due = next week</li>
+          <li><div class="step-num">3</div> Save — bill appears in Pending Bills list</li>
+          <li><div class="step-num">4</div> Show bill cards with due date badges and status indicators</li>
+          <li><div class="step-num">5</div> Click <strong>Mark as Paid</strong> → select payment method (UPI/GPay) → confirm</li>
+          <li><div class="step-num">6</div> Show confetti animation + bill moves to Paid section</li>
+          <li><div class="step-num">7</div> Show dashboard reflecting new bill-payment expense automatically</li>
+        </ul>
+        <div class="scene-narration">
+          <strong>🎙️ Narration:</strong> "The Bills Manager tracks all utility payments with due dates. When a bill is marked as paid, it automatically creates an expense entry in your ledger. Overdue bills trigger real-time Smart Advisor alerts."
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 7 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <div class="scene-number">7</div>
+        <div>
+          <div class="scene-title">AI Advisor + Backend Architecture</div>
+          <div style="font-size:13px;color:#64748b;">AI insights + technical overview</div>
+        </div>
+        <div class="scene-time">⏱ 2:05 – 2:20</div>
+      </div>
+      <div class="scene-body">
+        <ul class="scene-steps">
+          <li><div class="step-num">1</div> Go back to <strong>Dashboard</strong></li>
+          <li><div class="step-num">2</div> Point to the <strong>Smart Advisor</strong> panel — show 3-4 AI insight cards</li>
+          <li><div class="step-num">3</div> Explain: budget overrun alert, overdue bill warning, savings tip</li>
+          <li><div class="step-num">4</div> Open a new browser tab → go to <code style="color:#a5b4fc;">http://localhost:5000/api/health</code> → show JSON response</li>
+          <li><div class="step-num">5</div> Go to <code style="color:#a5b4fc;">http://localhost:5000/api/db-health</code> → show <code style="color:#6ee7b7;">{"status":"connected"}</code></li>
+          <li><div class="step-num">6</div> Go to <code style="color:#a5b4fc;">http://localhost:5000/api/db-tables</code> → show all 6 tables listed</li>
+          <li><div class="step-num">7</div> Show the Family Split View tab briefly</li>
+        </ul>
+        <div class="scene-narration">
+          <strong>🎙️ Narration:</strong> "The AI Smart Advisor uses rule-based intelligence to provide financial recommendations. The backend runs on Node.js with 26 REST API endpoints. Our database uses Neon PostgreSQL with 6 tables — all visible here through the API health endpoints."
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 8 -->
+    <div class="scene-card">
+      <div class="scene-header">
+        <div class="scene-number">8</div>
+        <div>
+          <div class="scene-title">Closing — Full Dashboard View</div>
+          <div style="font-size:13px;color:#64748b;">Final shot + project credits</div>
+        </div>
+        <div class="scene-time">⏱ 2:20 – 2:45</div>
+      </div>
+      <div class="scene-body">
+        <ul class="scene-steps">
+          <li><div class="step-num">1</div> Navigate to Dashboard and scroll to show the complete view</li>
+          <li><div class="step-num">2</div> Show Income, Expenses, Balance, Health Score all populated with real data</li>
+          <li><div class="step-num">3</div> Toggle dark mode → show dark dashboard for a dramatic closing shot</li>
+          <li><div class="step-num">4</div> Zoom out slowly to show the full application</li>
+          <li><div class="step-num">5</div> Fade out to closing title card</li>
+        </ul>
+        <div class="scene-narration">
+          <strong>🎙️ Closing text:</strong> "HomeLedger Pro – Making Household Financial Management Smarter and Easier." · Team Name · Department of Computer Science &amp; Engineering · Sandip University · 2026
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════ TOOLS ══════════════════ -->
+<div class="section">
+  <h2 class="section-title">🛠️ Recommended Screen Recording Tools</h2>
+  <p class="section-sub">Use any of these FREE tools — all produce 1080p quality output.</p>
+
+  <table class="tool-table">
+    <thead>
+      <tr>
+        <th>Tool</th><th>Platform</th><th>Cost</th><th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>OBS Studio</strong></td><td>Windows / Mac / Linux</td>
+        <td><span class="tool-free">FREE</span></td>
+        <td>Professional recording, 1080p, scene transitions</td>
+      </tr>
+      <tr>
+        <td><strong>ShareX</strong></td><td>Windows only</td>
+        <td><span class="tool-free">FREE</span></td>
+        <td>Quick recording + basic editing + GIF</td>
+      </tr>
+      <tr>
+        <td><strong>Xbox Game Bar</strong></td><td>Windows 10/11</td>
+        <td><span class="tool-free">FREE (built-in)</span></td>
+        <td>Win + G → instant recording</td>
+      </tr>
+      <tr>
+        <td><strong>Loom</strong></td><td>Browser extension</td>
+        <td><span class="tool-free">FREE (5 min limit)</span></td>
+        <td>Instant share link, good for demos</td>
+      </tr>
+      <tr>
+        <td><strong>DaVinci Resolve</strong></td><td>Windows / Mac</td>
+        <td><span class="tool-free">FREE</span></td>
+        <td>Professional video editing + transitions + text</td>
+      </tr>
+      <tr>
+        <td><strong>Canva Video</strong></td><td>Browser</td>
+        <td><span class="tool-free">FREE tier</span></td>
+        <td>Title cards, transitions, music overlay</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-size:18px;font-weight:700;margin-bottom:16px;color:#e2e8f0;">🎵 Free Background Music Sources</h3>
+  <div class="tip-grid">
+    <div class="tip-card">
+      <div class="tip-icon">🎵</div>
+      <div class="tip-title">YouTube Audio Library</div>
+      <div class="tip-desc">Free music at studio.youtube.com/channel/music — search "ambient corporate technology"</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🎶</div>
+      <div class="tip-title">Pixabay Music</div>
+      <div class="tip-desc">pixabay.com/music — search "technology background" — no attribution needed</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🎼</div>
+      <div class="tip-title">Bensound</div>
+      <div class="tip-desc">bensound.com — "Corporate" or "Ukulele" tracks work well for tech demos</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🔊</div>
+      <div class="tip-title">ZapSplat</div>
+      <div class="tip-desc">zapsplat.com — technology and corporate background tracks (free with account)</div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════ SETUP COMMANDS ══════════════════ -->
+<div class="section">
+  <h2 class="section-title">⚙️ Setup Commands Before Recording</h2>
+  <p class="section-sub">Run these commands to have the application ready for recording.</p>
+
+  <div class="alert alert-warn">
+    ⚠️ <strong>Before recording:</strong> Run the SQL migration in Neon first so registration works with the real database. Then start both backend and frontend.
+  </div>
+
+  <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#e2e8f0;">Terminal 1 — Start Backend</h3>
+  <div class="code-block">
+<span class="code-comment"># Navigate to server folder</span>
+<span class="code-cmd">cd</span> <span class="code-str">C:\Users\rr957\.gemini\antigravity\scratch\smart-home-budget-tracker\server</span>
+
+<span class="code-comment"># Start the Express API server</span>
+<span class="code-cmd">node server.js</span>
+
+<span class="code-comment"># Expected output:</span>
+<span class="code-comment"># HomeLedger Pro API running on port 5000</span>
+  </div>
+
+  <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#e2e8f0;">Terminal 2 — Start Frontend</h3>
+  <div class="code-block">
+<span class="code-comment"># Navigate to project root</span>
+<span class="code-cmd">cd</span> <span class="code-str">C:\Users\rr957\.gemini\antigravity\scratch\smart-home-budget-tracker</span>
+
+<span class="code-comment"># Start Vite dev server</span>
+<span class="code-cmd">npm run dev</span>
+
+<span class="code-comment"># Opens at: http://localhost:3000</span>
+  </div>
+
+  <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#e2e8f0;">Test API Endpoints (for Scene 7)</h3>
+  <div class="code-block">
+<span class="code-comment"># Open these URLs in browser for backend demo:</span>
+<span class="code-url">http://localhost:5000/api/health</span>       <span class="code-comment">→ {"status":"ok","app":"HomeLedger Pro API"}</span>
+<span class="code-url">http://localhost:5000/api/db-health</span>    <span class="code-comment">→ {"status":"connected","databaseTime":"..."}</span>
+<span class="code-url">http://localhost:5000/api/db-tables</span>    <span class="code-comment">→ {"tables":["bills","budgets","expenses","income","savings_goals","users"]}</span>
+  </div>
+
+  <div class="alert alert-success">
+    ✅ <strong>Pro Tip:</strong> Before recording, do a full practice run once. Close all unnecessary browser tabs and notifications. Set browser zoom to 100%. Use Full Screen mode (F11) for the best recording quality.
+  </div>
+</div>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════ RECORDING TIPS ══════════════════ -->
+<div class="section">
+  <h2 class="section-title">💡 Professional Recording Tips</h2>
+  <p class="section-sub">Small details that make a big difference in video quality.</p>
+
+  <div class="tip-grid">
+    <div class="tip-card">
+      <div class="tip-icon">🖥️</div>
+      <div class="tip-title">1920×1080 Resolution</div>
+      <div class="tip-desc">Set your display to 1080p before recording. OBS: set canvas to 1920×1080 in Settings → Video.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🔇</div>
+      <div class="tip-title">Mute Notifications</div>
+      <div class="tip-desc">Enable Do Not Disturb mode (Windows: Focus Assist → Alarms Only) before recording starts.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🖱️</div>
+      <div class="tip-title">Slow Smooth Mouse</div>
+      <div class="tip-desc">Move your cursor slowly and deliberately. Viewers need time to follow. Pause 1 second on each element.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🌐</div>
+      <div class="tip-title">Clean Browser</div>
+      <div class="tip-desc">Use Incognito/Private mode so no bookmarks, extensions, or personal data appears on screen.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🎨</div>
+      <div class="tip-title">Dark Mode = Cinematic</div>
+      <div class="tip-desc">Record in dark mode — it looks more professional and shows less browser chrome. Toggle in the navbar.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🔍</div>
+      <div class="tip-title">Zoom In on Details</div>
+      <div class="tip-desc">Use Ctrl+Plus to zoom in when showing forms, charts, or numbers. Zoom out between scenes.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🎙️</div>
+      <div class="tip-title">Voice or Text</div>
+      <div class="tip-desc">Record with a microphone OR add text captions in DaVinci Resolve. Either approach is professional.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">📱</div>
+      <div class="tip-title">Show Mobile View</div>
+      <div class="tip-desc">Press F12 → Toggle Device Mode in Chrome → show mobile responsiveness. Great ending shot!</div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider" />
+
+<!-- ══════════════════ GITHUB ══════════════════ -->
+<div class="section">
+  <h2 class="section-title">🐙 GitHub Repository</h2>
+  <p class="section-sub">Your complete project is available on two branches.</p>
+
+  <div class="alert alert-info">
+    📌 Branch <strong>backend-database-api</strong> contains all backend, API, database, and frontend integration code. Do NOT merge to main without testing.
+  </div>
+
+  <div class="code-block">
+<span class="code-comment"># Repository URL</span>
+<span class="code-url">https://github.com/Goldenheart91221/smart-home-budget-tracker</span>
+
+<span class="code-comment"># Branches</span>
+main                    <span class="code-comment">→ Frontend only (original working app)</span>
+backend-database-api    <span class="code-comment">→ Full stack: backend + database + API integration</span>
+
+<span class="code-comment"># To clone and run on another machine:</span>
+<span class="code-cmd">git clone</span> https://github.com/Goldenheart91221/smart-home-budget-tracker.git
+<span class="code-cmd">cd</span> smart-home-budget-tracker
+<span class="code-cmd">git checkout</span> backend-database-api
+<span class="code-cmd">npm install</span>
+<span class="code-cmd">cd server && npm install</span>
+<span class="code-comment"># Create server/.env from .env.example</span>
+<span class="code-comment"># Run SQL migration in Neon</span>
+<span class="code-cmd">node server.js</span>   <span class="code-comment"># Terminal 1</span>
+<span class="code-cmd">npm run dev</span>       <span class="code-comment"># Terminal 2 (from project root)</span>
+  </div>
+
+  <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#e2e8f0;">📁 Project Structure</h3>
+  <div class="code-block">
+smart-home-budget-tracker/
+├── <span class="code-str">src/</span>                        <span class="code-comment">React frontend</span>
+│   ├── <span class="code-str">components/</span>             <span class="code-comment">UI components (Dashboard, Bills, Expenses...)</span>
+│   ├── <span class="code-str">context/</span>
+│   │   ├── AuthContext.jsx     <span class="code-comment">Auth (backend API + localStorage fallback)</span>
+│   │   └── BudgetContext.jsx   <span class="code-comment">Data layer (backend API + localStorage fallback)</span>
+│   └── <span class="code-str">lib/</span>
+│       └── api.js              <span class="code-comment">Centralized API client (JWT management)</span>
+├── <span class="code-str">server/</span>                     <span class="code-comment">Node.js + Express backend</span>
+│   ├── server.js               <span class="code-comment">26 API endpoints</span>
+│   ├── migrate.sql             <span class="code-comment">PostgreSQL migration (6 tables)</span>
+│   ├── test-api.js             <span class="code-comment">23-test automated suite</span>
+│   └── .env                    <span class="code-comment">🔒 NOT committed (in .gitignore)</span>
+├── .env.example                <span class="code-comment">Safe template for environment variables</span>
+├── vite.config.js              <span class="code-comment">/api proxy → localhost:5000</span>
+└── package.json                <span class="code-comment">Frontend dependencies</span>
+  </div>
+</div>
+
+<footer>
+  <p><strong>HomeLedger Pro</strong> — Smart Home Budget &amp; Expense Tracker</p>
+  <p style="margin-top:8px;">B.Tech CSE · Sandip University · 2026 &nbsp;|&nbsp; React · Node.js · PostgreSQL · JWT · TailwindCSS</p>
+  <p style="margin-top:16px;font-size:12px;color:#334155;">
+    This recording guide is based on verified, actual source code features only. No fake screens or placeholder UI.
+  </p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,124 @@
+{
+  "folders": [
+    {
+      "name": "HomeLedger Pro — Root (Frontend)",
+      "path": "."
+    },
+    {
+      "name": "HomeLedger Pro — Backend (server/)",
+      "path": "server"
+    }
+  ],
+  "settings": {
+    "editor.fontSize": 14,
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active",
+    "workbench.colorTheme": "One Dark Pro",
+    "workbench.iconTheme": "material-icon-theme",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/.git": true,
+      "**/dist": false
+    },
+    "emmet.includeLanguages": {
+      "javascript": "javascriptreact"
+    },
+    "javascript.preferences.importModuleSpecifier": "relative",
+    "eslint.enable": true,
+    "tailwindCSS.experimental.classRegex": [
+      ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+      ["className\\s*=\\s*\\{([^}]*)\\}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "bradlc.vscode-tailwindcss",
+      "dsznajder.es7-react-js-snippets",
+      "christian-kohler.path-intellisense",
+      "formulahendry.auto-rename-tag",
+      "zhuangtongfa.material-theme",
+      "pkief.material-icon-theme",
+      "humao.rest-client",
+      "mtxr.sqltools",
+      "mtxr.sqltools-driver-pg"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "🚀 Start Backend (node server.js)",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder:HomeLedger Pro — Backend (server/)}/server.js",
+        "cwd": "${workspaceFolder:HomeLedger Pro — Backend (server/)}",
+        "envFile": "${workspaceFolder:HomeLedger Pro — Backend (server/)}/.env",
+        "console": "integratedTerminal",
+        "restart": true
+      }
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "▶ Start Frontend (npm run dev)",
+        "type": "shell",
+        "command": "npm run dev",
+        "options": {
+          "cwd": "${workspaceFolder:HomeLedger Pro — Root (Frontend)}"
+        },
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "▶ Start Backend (node server.js)",
+        "type": "shell",
+        "command": "node server.js",
+        "options": {
+          "cwd": "${workspaceFolder:HomeLedger Pro — Backend (server/)}"
+        },
+        "group": "build",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "🧪 Run API Tests (node test-api.js)",
+        "type": "shell",
+        "command": "node test-api.js",
+        "options": {
+          "cwd": "${workspaceFolder:HomeLedger Pro — Backend (server/)}"
+        },
+        "group": "test",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "📦 Build Frontend (npm run build)",
+        "type": "shell",
+        "command": "npm run build",
+        "options": {
+          "cwd": "${workspaceFolder:HomeLedger Pro — Root (Frontend)}"
+        },
+        "group": "build",
+        "problemMatcher": []
+      }
+    ]
+  }
+}

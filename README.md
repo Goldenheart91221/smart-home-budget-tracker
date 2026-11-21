@@ -1,111 +1,223 @@
-# HomeLedger Pro 🏡💰
-### Smart Home Budget & Household Expenses Management Suite
+# HomeLedger Pro 🏠💰
+### Smart Home Budget & Expense Tracker
 
-HomeLedger Pro is a modern, attractive, and professional household finance application engineered for families, shared households, and roommates. It provides deep visibility into monthly bills, utility meters, grocery allowances, domestic staff payments, and lifestyle expenditures with intelligent rule-based insights and interactive analytics.
+> **B.Tech CSE Project · Sandip University · 2026**  
+> Full-Stack Web Application with React, Node.js, PostgreSQL, and JWT Authentication
 
----
-
-## 🌟 Key Features
-
-1. **Smart Executive Dashboard**:
-   - Real-time KPI summary cards: Total Inflow, Total Household Expenses, Net Balance, Savings Retention Rate.
-   - **Automated Financial Health Score (0-100)**: Color-coded health badge (*Optimal*, *Good*, *Needs Attention*, *Critical*) with actionable advice.
-   - **Interactive Charts**:
-     - *Category Breakdown* (Doughnut Chart with percentages).
-     - *Daily Velocity Curve* (Day-by-day spending trend).
-     - *Inflow vs Outflow vs Budget Cap* (Multi-bar comparison).
-
-2. **Smart Category Budget Envelopes**:
-   - Pre-configured household categories: Groceries & Ration, Electricity & Power, Broadband/Wi-Fi, Water & PNG Gas, Rent & Home Loan, Maid & Staff, Society Maintenance, Dining & Takeout, Healthcare, Fuel, Subscriptions (OTT), and Investments.
-   - Color-coded progress bars with live alerts when nearing or exceeding limits (>80% amber, >100% red pulsing).
-   - Instant in-place budget editing.
-
-3. **Smart Household Bill & Due-Date Manager**:
-   - Bill tracking for recurring utilities (Electricity Board, Fiber Wi-Fi, PNG gas, Maid salary, Society charges).
-   - Due-date countdown badges: *Due in 2 days*, *Due Today*, *Overdue*, *Settled*.
-   - **1-Click "Pay & Record Expense"**: Instantly settles the bill and records the transaction into your ledger with exact payment method!
-
-4. **Family & Roommate Expense Split**:
-   - Tag expenses to family members or roommates (*Self, Spouse, Joint Account, Roommate, etc.*).
-   - Member contribution analytics with percentage shares and individual drill-down statements.
-   - Add custom household members with custom avatars and roles.
-
-5. **Smart Insights & Rule-Based AI Advisor**:
-   - Automated anomaly detection: alerts on unusual utility bill surges, projected budget exhaustion, and overdue penalties.
-   - Smart energy-saving and grocery cost-cutting tips.
-
-6. **Quick-Add Staples**:
-   - 1-tap quick buttons for frequent household items (*Daily Milk ₹65, Bread & Eggs ₹140, Veggies ₹320, Water Can ₹60, Swiggy ₹380*).
-
-7. **Filters, Multi-Currency & Dark Mode**:
-   - Search by title or notes.
-   - Filter by date, category, family member, and payment method (UPI, Credit Card, Net Banking, Cash).
-   - One-click currency switcher: `₹` INR, `$` USD, `€` EUR, `£` GBP, `AED`.
-   - Dark Mode / Light Mode with seamless theme transition.
-
-8. **Data Security & Portability**:
-   - **Offline-First**: Persists securely in browser `localStorage`.
-   - **Instant CSV Export**: Excel-ready download of all transactions.
-   - **Full JSON Backup & Restore**: Port and backup your complete data anytime.
-   - **Printable Monthly Household Statement**: Clean printer/PDF sheet view.
+[![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-blue?logo=react)](https://reactjs.org)
+[![Backend](https://img.shields.io/badge/Backend-Node.js%20%2B%20Express-green?logo=node.js)](https://nodejs.org)
+[![Database](https://img.shields.io/badge/Database-Neon%20PostgreSQL-blue?logo=postgresql)](https://neon.tech)
+[![Auth](https://img.shields.io/badge/Auth-JWT%20%2B%20bcryptjs-red)](https://jwt.io)
+[![CSS](https://img.shields.io/badge/CSS-TailwindCSS-cyan?logo=tailwindcss)](https://tailwindcss.com)
 
 ---
 
-## 🚀 Getting Started
+## 🌟 Features
+
+| Feature | Status |
+|---------|--------|
+| 🔐 User Registration & Login (JWT + bcryptjs) | ✅ Working |
+| 📊 Real-time Dashboard (Income, Expenses, Balance, Health Score) | ✅ Working |
+| 💸 Expense & Income Management (Add/Edit/Delete/Filter) | ✅ Working |
+| 📋 Monthly Budget Management (per category, visual progress) | ✅ Working |
+| 🧾 Bills Manager (due dates, mark-as-paid, overdue alerts) | ✅ Working |
+| 👨‍👩‍👧 Family Split View (multi-member expense tracking) | ✅ Working |
+| 🤖 AI Smart Advisor (rule-based financial insights) | ✅ Working |
+| 👑 Admin Portal (user management, audit logs) | ✅ Working |
+| 🗄️ Backend REST API (26 endpoints) | ✅ Working |
+| 🐘 Neon PostgreSQL Database (6 tables) | ✅ Working |
+| 📤 Data Export (JSON) | ✅ Working |
+| 🌙 Dark / Light Mode | ✅ Working |
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js (v18+) & npm
+- Node.js ≥ 18
+- Neon PostgreSQL account (free at [neon.tech](https://neon.tech))
 
-### Development Server
+### 1. Clone the Repository
+
 ```bash
-# Navigate to project directory
+git clone https://github.com/Goldenheart91221/smart-home-budget-tracker.git
 cd smart-home-budget-tracker
-
-# Install dependencies (if not already installed)
-npm install
-
-# Start local server (running at http://localhost:3000)
-npm run dev
+git checkout backend-database-api
 ```
 
-### Production Build
+### 2. Install Dependencies
+
 ```bash
-npm run build
-npm run preview
+# Frontend
+npm install
+
+# Backend
+cd server
+npm install
+cd ..
+```
+
+### 3. Configure Environment
+
+```bash
+# Copy the example env file
+cp .env.example server/.env
+
+# Edit server/.env with your real values:
+# DATABASE_URL=your_neon_connection_string
+# DATABASE_SSL=true
+# JWT_SECRET=your_strong_secret
+# PORT=5000
+```
+
+### 4. Run SQL Migration
+
+1. Go to [console.neon.tech](https://console.neon.tech)
+2. Open your project → SQL Editor
+3. Paste contents of `server/migrate.sql`
+4. Click Run
+
+### 5. Start the Application
+
+```bash
+# Terminal 1 — Backend
+cd server
+node server.js
+# → HomeLedger Pro API running on port 5000
+
+# Terminal 2 — Frontend
+npm run dev
+# → http://localhost:3000
 ```
 
 ---
 
 ## 📁 Project Structure
+
 ```
 smart-home-budget-tracker/
-├── src/
+├── src/                          # React Frontend (Vite)
 │   ├── components/
-│   │   ├── Bills/
-│   │   │   └── BillManager.jsx          # Utility bills due-dates & 1-click pay
-│   │   ├── Budgets/
-│   │   │   └── CategoryBudgetCard.jsx   # Envelope progress bars & limit editor
-│   │   ├── Dashboard/
-│   │   │   ├── AnalyticsCharts.jsx      # Doughnut, Line & Bar Chart.js visuals
-│   │   │   ├── MetricCards.jsx          # Top KPI cards & Health Score gauge
-│   │   │   └── SmartAdvisor.jsx         # Rule-based AI tips & overrun alerts
-│   │   ├── Expenses/
-│   │   │   ├── AddExpenseModal.jsx      # Quick-add chips, category & member selector
-│   │   │   └── ExpenseList.jsx          # Searchable ledger table & CSV export
-│   │   ├── Family/
-│   │   │   └── FamilySplitView.jsx      # Member attribution & share breakdown
-│   │   ├── CategoryIcon.jsx             # Dynamic Lucide icon renderer
-│   │   ├── ExportModal.jsx              # CSV export, JSON backup & restore
-│   │   └── Navbar.jsx                   # Header, month switcher, theme & currency
+│   │   ├── Dashboard/            # MetricCards, SmartAdvisor, AnalyticsCharts
+│   │   ├── Expenses/             # AddExpenseModal, ExpenseList
+│   │   ├── Budgets/              # CategoryBudgetCard
+│   │   ├── Bills/                # BillManager
+│   │   ├── Family/               # FamilySplitView
+│   │   ├── Admin/                # AdminDashboard
+│   │   └── Auth/                 # AuthPage, ForgotPasswordModal
 │   ├── context/
-│   │   └── BudgetContext.jsx            # Central state, localStorage & calculations
-│   ├── types/
-│   │   └── defaultData.js               # Realistic seed categories, bills & members
-│   ├── App.jsx
-│   ├── index.css
-│   └── main.jsx
-├── index.html
-├── package.json
-├── tailwind.config.js
-└── vite.config.js
+│   │   ├── AuthContext.jsx       # Auth (backend + localStorage fallback)
+│   │   └── BudgetContext.jsx     # Data layer (backend + localStorage fallback)
+│   └── lib/
+│       └── api.js                # API client (JWT token management)
+│
+├── server/                       # Node.js + Express Backend
+│   ├── server.js                 # 26 REST API endpoints
+│   ├── migrate.sql               # PostgreSQL migration (6 tables)
+│   ├── test-api.js               # 23-test automated test suite
+│   └── package.json              # Backend dependencies
+│
+├── .env.example                  # Safe environment variable template
+├── HomeledgerPro.code-workspace  # VS Code workspace configuration
+├── demo_video_guide.html         # Professional demo video recording guide
+├── vite.config.js                # Vite config (/api proxy to port 5000)
+└── package.json                  # Frontend dependencies
 ```
+
+---
+
+## 🔌 API Endpoints (26 Total)
+
+### Public
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/health` | App health check |
+| GET | `/api/db-health` | Database connectivity |
+| GET | `/api/db-tables` | List DB tables |
+| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/login` | Login, returns JWT |
+
+### Protected (Bearer JWT required)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/user/profile` | Current user profile |
+| GET/POST | `/api/expenses` | List / Add expenses |
+| PUT/DELETE | `/api/expenses/:id` | Edit / Delete expense |
+| GET | `/api/expenses/summary` | Category spend totals |
+| GET/POST | `/api/income` | List / Add income |
+| DELETE | `/api/income/:id` | Delete income |
+| GET/POST | `/api/budgets` | List / Upsert budget |
+| GET/POST | `/api/bills` | List / Add bills |
+| PUT/DELETE | `/api/bills/:id` | Edit / Delete bill |
+| PATCH | `/api/bills/:id/pay` | Mark bill paid |
+| GET/POST | `/api/savings` | List / Add savings goals |
+| PUT/DELETE | `/api/savings/:id` | Edit / Delete savings |
+| PATCH | `/api/savings/:id/contribute` | Add contribution |
+
+---
+
+## 🗄️ Database Schema
+
+```sql
+users           -- id, name, email, password (bcrypt), role, created_at
+expenses        -- id, user_id, title, amount, category, expense_date, notes
+income          -- id, user_id, source, amount, category, income_date, notes  
+budgets         -- id, user_id, category, amount, month (UNIQUE per user/cat/month)
+bills           -- id, user_id, name, amount, due_date, status, notes
+savings_goals   -- id, user_id, name, target_amount, saved_amount, deadline, notes
+```
+
+---
+
+## 🔒 Security
+
+- Passwords hashed with **bcryptjs** (12 salt rounds) — never stored in plain text
+- **JWT tokens** with 7-day expiry, stored in `sessionStorage` (tab-scoped)
+- All DB queries use **parameterized statements** (no SQL injection)
+- All private routes require valid JWT middleware
+- Each user can only access **their own records** (`WHERE user_id = $1`)
+- `.env` file is in `.gitignore` — credentials never committed
+
+---
+
+## 🧪 Running Tests
+
+```bash
+cd server
+node test-api.js
+# Expected: 23/23 tests passed
+```
+
+---
+
+## 🌿 Branches
+
+| Branch | Description |
+|--------|-------------|
+| `main` | Original frontend (localStorage only) |
+| `backend-database-api` | Full stack with backend, database, and API integration |
+
+---
+
+## 🎬 Demo Video
+
+See [`demo_video_guide.html`](./demo_video_guide.html) for the complete scene-by-scene recording plan, tool recommendations, and narration scripts.
+
+---
+
+## 👥 Team
+
+| Field | Detail |
+|-------|--------|
+| **Project** | HomeLedger Pro — Smart Home Budget & Expense Tracker |
+| **University** | Sandip University |
+| **Department** | Computer Science & Engineering |
+| **Year** | 2026 |
+| **Team** | *(Add team member names and enrollment numbers)* |
+| **Mentor** | *(Add faculty mentor name)* |
+
+---
+
+## 📄 License
+
+This project was developed as a B.Tech CSE college project. All rights reserved by the team.
